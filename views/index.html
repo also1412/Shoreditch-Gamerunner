@@ -1,0 +1,15 @@
+<h1>Shoreditch Gameserver</h1>
+
+<h2>Players</h2>
+<ul>
+	%for player in players:
+		<li>{{player['name']}} : {{player['endpoint']}}</li>
+	%end
+</ul>
+
+<h3>Add Player</h3>
+<form method="POST" action="/ui/player">
+	<label>Name<input type="text" name="name"></label>
+	<label>Endpoint<input type="text" name="endpoint"></label>
+	<button>Add player</button>
+</form>

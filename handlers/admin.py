@@ -9,16 +9,16 @@ from util import sanitise
 @post('/player')
 @require_json('name', 'endpoint')
 @use_db
-def register(db):
-	player_id = request.json.get('id', uuid4().hex)
+def add_player(db, json):
+	player_id = json.get('id', uuid4().hex)
 	player_secret = uuid4().hex
 
 	player = {
 		"id": player_id,
 		"type": "player",
 		"secret": player_secret,
-		"name": request.json['name'],
-		"endpoint": request.json['endpoint']
+		"name": json['name'],
+		"endpoint": json['endpoint']
 	}
 
 	db.save(player)
