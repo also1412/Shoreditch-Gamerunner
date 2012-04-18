@@ -3,6 +3,7 @@
 #########
 
 from uuid import uuid4
+from copy import copy
 
 class MemoryStorage(object):
 	def __init__(self):
@@ -23,7 +24,20 @@ class MemoryStorage(object):
 	def get_by_type(self, doc_type):
 		if doc_type not in self.types:
 			return []
-		return self.types[doc_type].values()
+		return [copy(doc) for doc in self.types[doc_type].values()]
+
+	def get(self, key):
+		if self.exists(key):
+			return copy(self.docs[key])
+		return None
+
+	def exists(self, key):
+		if key in self.docs:
+			return True
+		return False
+
+	def get_by_keys(self, keys):
+		return [self.get(key) for key in keys if self.exists(key)]
 
 	def empty(self):
 		self.docs = {}
