@@ -44,7 +44,7 @@ def start_game(db, players):
 	started_players = []
 
 	for player in game['players']:
-		response = communication.request(player, "start_game", {"player": player})
+		response, data = communication.request(player, "start_game", {"player": player})
 		if response.status != 200:
 			for p in started_players:
 				communication.request(player, "cancel_game", {"player": player})

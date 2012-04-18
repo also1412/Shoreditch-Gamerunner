@@ -1,7 +1,9 @@
+from uuid import uuid4
 from copy import copy
 
 from bottle import request
 from bottle import abort
+
 
 
 def require_json(*fields):
@@ -24,3 +26,19 @@ def sanitise(doc):
 	doc = copy(doc)
 	del doc['secret']
 	return doc
+
+def add_player(db, name, endpoint, player_id=None):
+	if not player_id:
+		player_id = uuid4().hex
+	player_secret = uuid4().hex
+
+	player = {
+		"id": player_id,
+		"type": "player",
+		"secret": player_secret,
+		"name": name,
+		"endpoint": endpoint
+	}
+
+	db.save(player)
+	return player

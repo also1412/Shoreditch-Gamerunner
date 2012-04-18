@@ -46,8 +46,5 @@ class MemoryStorage(object):
 
 memory_storage = MemoryStorage()
 
-# decorator to add the DB to arguments
-def use_db(f):
-	def inner_func(*args, **kwargs):
-		return f(memory_storage, *args, **kwargs)
-	return inner_func
+def get_db():
+	return memory_storage
