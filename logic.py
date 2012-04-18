@@ -43,7 +43,7 @@ def start_game(db, players):
 		"id": game_id,
 		"players": {},
 		"player_order": []
-		"turn_count" = 0
+		"turn_count": 0
 	}
 
 	for player in players:
