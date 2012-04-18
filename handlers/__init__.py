@@ -1,4 +1,4 @@
 # import handlers here to register them with bottle
 
-import hello
+import test
 import admin

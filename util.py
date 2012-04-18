@@ -1,3 +1,5 @@
+from copy import copy
+
 from bottle import request
 from bottle import abort
 
@@ -13,3 +15,9 @@ def require_json(*fields):
 			return f(*args, **kwargs)
 		return inner_func
 	return require_json_inner
+
+# Remove sensitive data from a document
+def sanitise(doc):
+	doc = copy(doc)
+	del doc['secret']
+	return doc

@@ -1,9 +1,12 @@
 import unittest
 from uuid import uuid4
-from test import request
+from test import request, clear_db, create_player
 import json
 
 class AdminTest(unittest.TestCase):
+	def setUp(self):
+		clear_db()
+
 	def test_register(self):
 		player_data = {
 			"name": uuid4().hex,
@@ -48,3 +51,20 @@ class AdminTest(unittest.TestCase):
 		player = json.loads(data)['player']
 
 		assert player['id'] == player_data['id'], (response, data)
+
+	def test_list_players(self):
+		response, data = request('players')
+		assert response.status == 200, (response, data)
+
+		players = json.loads(data)['players']
+
+		assert len(players) == 0, players
+
+		create_player()
+
+		response, data = request('players')
+		assert response.status == 200, (response, data)
+
+		players = json.loads(data)['players']
+
+		assert len(players) == 1, players
