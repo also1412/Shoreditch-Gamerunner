@@ -19,3 +19,18 @@ class AdminTest(unittest.TestCase):
 		assert 'secret' in player, player
 		assert player['name'] == player_data['name'], player
 		assert player['endpoint'] == player_data['endpoint'], player
+
+	def test_cant_register_without_name_or_endpoint(self):
+		player_data = {
+			"name": uuid4().hex,
+		}
+
+		response, data = request('player', 'POST', player_data)
+		assert response.status == 400, (response, data)
+
+		player_data = {
+			"endpoint": uuid4().hex,
+		}
+
+		response, data = request('player', 'POST', player_data)
+		assert response.status == 400, (response, data)
