@@ -1,0 +1,3 @@
+[submodule "ai/SampleAI"]
+	path = ai/SampleAI
+	url = git://github.com/Wazoku/Shoreditch-SampleAI.git
