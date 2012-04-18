@@ -1,3 +1,3 @@
 AI = {
-	"SampleAI": "http://localhost:8099",
+	"SampleAI": ["Sample AI", "http://localhost:8099"],
 }

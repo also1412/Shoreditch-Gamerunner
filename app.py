@@ -13,6 +13,6 @@ from util import add_player
 db = get_db()
 
 for ai in AI:
-	add_player(db, ai, AI[ai])
+	add_player(db, AI[ai][0], AI[ai][1], ai)
 
 run(host='localhost', port=PORT, reloader=True)

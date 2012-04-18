@@ -62,4 +62,4 @@ for generator in GENERATORS.keys():
 
 DEFAULT_RESOURCES = {}
 for resource in GENERATORS.values():
-	DEFAULT_GENERATORS[resource] = 0
+	DEFAULT_RESOURCES[resource] = 0

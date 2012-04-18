@@ -3,3 +3,4 @@
 import test
 import admin
 import ui
+import game

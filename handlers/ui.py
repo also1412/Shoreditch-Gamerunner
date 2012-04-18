@@ -4,7 +4,8 @@ from bottle import request
 
 from storage import use_db
 
-from admin import list_players, add_player, start_game
+from admin import list_players, add_player
+from game import start_game
 
 @get('/ui/')
 @view('index.html')
