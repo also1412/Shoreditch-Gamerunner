@@ -29,7 +29,6 @@ def run_generators(players):
 	for player in players.values():
 		for generator in player['generators']:
 			if random.randint(1, 10) == 1:
-				print player['resources']
 				player['resources'][config.GENERATORS[generator]] += 1
 		for generator in player['improved_generators']:
 			if random.randint(1, 10) == 1:
@@ -42,8 +41,8 @@ def start_game(db, players):
 	game = {
 		"id": game_id,
 		"players": {},
-		"player_order": []
-		"turn_count": 0
+		"player_order": [],
+		"round": 0
 	}
 
 	for player in players:
@@ -63,15 +62,38 @@ def start_game(db, players):
 
 	db.save(game)
 
-	next_turn(game)
+	next_turn(db, game)
 	return True
 
-def next_turn(game):
+def next_turn(db, game):
 	print "Starting turn"
 	game['turn'] = game.get('turn', -1) + 1
+
+	if game['turn'] >= len(game['player_order']):
+		# Next round
+		game['round'] += 1
+
+		print "Starting round %i" % game['round']
+
+		if game['round'] >= config.MAX_ROUNDS:
+			end_game(game)
 
 	run_generators(game['players'])
 
 	player = game['players'][game['player_order'][game['turn']]] # Wow - nice line
 
-	communication.request(player, "start_turn", {"player": player})
+	response, data = communication.request(player, "start_turn", {"player": player})
+
+	db.save(game)
+	print game
+
+	if not response.status == 200:
+		# Incorrect response to turn, assume their turn has ended
+		end_turn(db, game, player)
+
+def end_turn(db, game, player):
+	print "Ended turn"
+	next_turn(db, game)
+
+def end_game(game):
+	print "THE GAME HAS ENDED"
