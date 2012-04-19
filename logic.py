@@ -53,7 +53,7 @@ def start_game(db, players):
 	started_players = []
 
 	for player in game['players'].values():
-		response, data = communication.request(player, "game/%s/%s" % (game_id, player['id']), {"player": player}, 'PUT')
+		response, data = communication.request(player, "game/%s" % (player['id']), {"player": player}, 'PUT')
 		if response.status != 200:
 			for p in started_players:
 				communication.request(player, "cancel_game", {"player": player})
@@ -66,30 +66,34 @@ def start_game(db, players):
 	return True
 
 def next_turn(db, game):
-	print "Starting turn"
-	game['turn'] = game.get('turn', -1) + 1
+	turn_taken = False
+	while not turn_taken: # Find the next player ready to make a move
+		print "Starting turn"
+		game['turn'] = game.get('turn', -1) + 1
 
-	if game['turn'] >= len(game['player_order']):
-		# Next round
-		game['round'] += 1
+		if game['turn'] >= len(game['player_order']):
+			# Next round
+			game['round'] += 1
+			game['turn'] = 0
 
-		print "Starting round %i" % game['round']
+			print "Starting round %i" % game['round']
 
-		if game['round'] >= config.MAX_ROUNDS:
-			end_game(game)
+			if game['round'] >= config.MAX_ROUNDS:
+				return end_game(game)
 
-	run_generators(game['players'])
+		run_generators(game['players'])
 
-	player = game['players'][game['player_order'][game['turn']]] # Wow - nice line
+		player = game['players'][game['player_order'][game['turn']]] # Wow - nice line
 
-	response, data = communication.request(player, "start_turn", {"player": player})
+		response, data = communication.request(player, "game/%s/start_turn" % player['id'], {"player": player})
 
-	db.save(game)
-	print game
+		db.save(game)
+		print game
 
-	if not response.status == 200:
-		# Incorrect response to turn, assume their turn has ended
-		end_turn(db, game, player)
+		if response.status == 200:
+			turn_taken = True
+		else:
+			print "Turn skipped"
 
 def end_turn(db, game, player):
 	print "Ended turn"
@@ -97,3 +101,5 @@ def end_turn(db, game, player):
 
 def end_game(game):
 	print "THE GAME HAS ENDED"
+	for player in game['players']:
+		communication.request(game['players'][player], "game/%s" % game['id'], method="DELETE")
