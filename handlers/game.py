@@ -1,7 +1,7 @@
 from bottle import get, post
 from bottle import abort
 
-from util import require_json
+from util import require_json, use_game, require_player
 from storage import use_db
 
 from config import MIN_PLAYERS, MAX_PLAYERS
@@ -25,3 +25,11 @@ def start_game(db, json):
 	game_id = logic.start_game(db, players)
 
 	return {"game_id": game_id}
+
+@post('/game/:game_id/end_turn')
+@use_db
+@use_game
+@require_player
+def end_turn(db, game, player):
+	if not logic.end_turn(db, game, player):
+		abort(400, "Can not end turn now")

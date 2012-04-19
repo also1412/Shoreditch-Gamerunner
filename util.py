@@ -21,6 +21,35 @@ def require_json(*fields):
 		return inner_func
 	return require_json_inner
 
+def use_game(f):
+	def inner_func(db, game_id, *args, **kwargs):
+		game = db.get(game_id)
+		if not game:
+			abort(400, "Invalid game id")
+		return f(db, game, *args, **kwargs)
+	return inner_func
+
+def require_player(f):
+	def inner_func(db, game, *args, **kwargs):
+		if not 'json' in kwargs:
+			if not request.json:
+				abort(400, 'Must use Content-type of application/json')
+			kwargs['json'] = request.json
+
+		if not 'player_id' in kwargs['json']:
+			abort(400, "Must pass player_id")
+
+		player_id = kwargs['json']['player_id']
+
+		if not player_id in game['players']:
+			abort(400, "Player not part of game")
+
+		player = game['players'][player_id]
+		del kwargs['json']
+		return f(db, game, player, *args, **kwargs)
+	return inner_func
+
+
 # Remove sensitive data from a document
 def sanitise(doc):
 	doc = copy(doc)

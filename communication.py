@@ -10,4 +10,8 @@ def request(player, resource, body=None, method='POST'):
 	if body and not isinstance(body, basestring):
 		body = json.dumps(body)
 
-	return http.request("%s/%s" % (player['endpoint'], resource), method=method, body=body, headers={"Content-type": "application/json"})
+	response, data = http.request("%s/%s" % (player['endpoint'], resource), method=method, body=body, headers={"Content-type": "application/json"})
+
+	if response.status == 400:
+		print data
+	return (response, data)
