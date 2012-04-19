@@ -17,7 +17,7 @@ def setup_player(player):
 		"player": player['id'],
 		"endpoint": player['endpoint'],
 		"generators": copy(config.DEFAULT_GENERATORS),
-		"improved_generators": [],
+		"improved_generators": copy(config.DEFAULT_GENERATORS),
 		"resources": copy(config.DEFAULT_RESOURCES),
 		"roads": 0
 	}
@@ -30,11 +30,13 @@ def setup_player(player):
 def run_generators(players):
 	for player in players.values():
 		for generator in player['generators']:
-			if random.randint(1, 10) == 1:
-				player['resources'][config.GENERATORS[generator]] += 1
+			for i in range(player['generators'][generator]):
+				if random.randint(1, 10) == 1:
+					player['resources'][config.GENERATORS[generator]] += 1
 		for generator in player['improved_generators']:
-			if random.randint(1, 10) == 1:
-				player['resources'][config.GENERATORS[generator]] += 2
+			for i in range(player['improved_generators'][generator]):
+				if random.randint(1, 10) == 1:
+					player['resources'][config.GENERATORS[generator]] += 2
 
 def start_game(db, players):
 	print "Starting game"
@@ -87,7 +89,7 @@ def next_turn(db, game):
 
 		player = game['players'][game['player_order'][game['turn']]] # Wow - nice line
 
-		response, data = communication.request(player, "game/%s/start_turn" % player['id'], {"player": player})
+		response, data = communication.request(player, "game/%s/start_turn" % player['id'])
 
 		db.save(game)
 
@@ -101,15 +103,44 @@ def require_player_turn(f):
 		return f(*args, **kwargs)
 	return inner_func
 
+def require_resources(resources):
+	def require_resources_inner(f):
+		def inner_func(db, game, player, *args, **kwargs):
+			for resource in resources:
+				if player['resources'][resource] < resources[resource]:
+					abort(400, 'Not enough %s' % resource)
+			return f(db, game, player, *args, **kwargs)
+		return inner_func
+	return require_resources_inner
+
+def charge_resources(player, resources):
+	for resource in resources:
+		player['resources'][resource] -= resources[resource]
+
 @require_player_turn
 def end_turn(db, game, player):
 	def run_end_turn():
 		next_turn(db, game)
 	print "Ended turn"
 	thread.start_new_thread(run_end_turn, ())
-	return True
+	return {"status": "success"}
 
 def end_game(game):
 	print "THE GAME HAS ENDED"
-	for player in game['players']:
-		communication.request(game['players'][player], "game/%s" % game['players'][player]['id'], method="DELETE")
+	for player in game['players'].values():
+		print "Player %s(%s)" % (player['id'], player['player'])
+		print "Resources"
+		print "========="
+		for resource in player['resources']:
+			print "	%s:	%s" % (resource, player['resources'][resource])
+
+		print "Roads:	%s" % player['roads']
+		communication.request(player, "game/%s" % player['id'], method="DELETE")
+
+@require_player_turn
+@require_resources(config.ROAD_COST)
+def purchase_road(db, game, player):
+	charge_resources(player, config.ROAD_COST)
+	player['roads'] += 1
+	db.save(game)
+	return {"player": player}

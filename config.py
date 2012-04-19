@@ -10,7 +10,7 @@ GENERATORS = {
 	"lumber_mill": "lumber",
 	"ore_refinery": "ore",
 	"grain_field": "grain",
-	"mommy_sheep": "sheep",
+	"sheep": "wool",
 	"building_yard": "brick"
 }
 

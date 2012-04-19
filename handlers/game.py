@@ -31,5 +31,11 @@ def start_game(db, json):
 @use_game
 @require_player
 def end_turn(db, game, player):
-	if not logic.end_turn(db, game, player):
-		abort(400, "Can not end turn now")
+	return logic.end_turn(db, game, player)
+
+@post('/game/:game_id/purchase_road')
+@use_db
+@use_game
+@require_player
+def purchase_road(db, game, player):
+	return logic.purchase_road(db, game, player)
