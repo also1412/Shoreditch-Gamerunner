@@ -47,6 +47,15 @@ def purchase_road(db, game, player):
 def purchase_generator(db, game, player):
 	return logic.purchase_generator(db, game, player)
 
+@post('/game/:game_id/upgrade_generator')
+@require_json('generator_type')
+@use_db
+@use_game
+@require_player
+def upgrade_generator(db, game, player):
+	generator_type = request.json['generator_type']
+	return logic.upgrade_generator(db, game, player, generator_type)
+
 @post('/game/:game_id/trade')
 @require_json('offering', 'requesting')
 @use_db

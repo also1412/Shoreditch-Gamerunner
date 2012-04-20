@@ -139,7 +139,7 @@ def require_resources(resources):
 	def require_resources_inner(f):
 		def inner_func(db, game, player, *args, **kwargs):
 			if not has_enough_resources(player, resources):
-				abort(400, 'Not enough %s' % resource)
+				abort(400, 'Not enough resources')
 			return f(db, game, player, *args, **kwargs)
 		return inner_func
 	return require_resources_inner
@@ -192,6 +192,22 @@ def purchase_generator(db, game, player):
 
 	db.save(game)
 	return {"player": player, 'generator_type': generator}
+
+@require_player_turn
+@require_resources(config.GENERATOR_IMPROVEMENT_COST)
+def upgrade_generator(db, game, player, generator_type):
+	# TODO: Check not over the limit
+
+	if player['generators'][generator_type] < 1:
+		abort(400, "You don't have enough %s" % generator_type)
+
+	charge_resources(player, config.GENERATOR_IMPROVEMENT_COST)
+
+	player['generators'][generator_type] -= 1
+	player['improved_generators'][generator_type] += 1
+
+	db.save(game)
+	return {"player": player, 'generator_type': generator_type}
 
 @require_player_turn
 def trade(db, game, player, offering, requesting):
