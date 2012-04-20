@@ -44,7 +44,7 @@ def purchase_road(db, game, player):
 @use_db
 @use_game
 @require_player
-def purchase_road(db, game, player):
+def purchase_generator(db, game, player):
 	return logic.purchase_generator(db, game, player)
 
 @post('/game/:game_id/trade')
