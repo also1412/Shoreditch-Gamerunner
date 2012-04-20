@@ -8,6 +8,8 @@ from copy import copy
 import communication
 import config
 
+from bottle import abort
+
 import thread
 
 
@@ -21,9 +23,6 @@ def setup_player(player):
 		"resources": copy(config.DEFAULT_RESOURCES),
 		"roads": 0
 	}
-
-	for i in range(config.DEFAULT_GENERATOR_NUMBER):
-		in_game_player['generators'][random.choice(config.GENERATORS.keys())] += 1
 
 	return in_game_player
 
@@ -53,6 +52,33 @@ def start_game(db, players):
 		p = setup_player(player)
 		game['players'][p['id']] = p
 		game['player_order'].append(p['id'])
+
+	generators_to_use = copy(config.GENERATORS.keys())
+	random.shuffle(generators_to_use)
+
+	p = 0
+	max_generators = 0
+
+	# First pass out all generators as evenly as possible
+	while (len(generators_to_use) > 0):
+		game['players'][game['player_order'][p]]['generators'][generators_to_use.pop()] += 1
+
+		total_generators = sum(game['players'][game['player_order'][p]]['generators'].values())
+
+		if total_generators > max_generators:
+			max_generators = total_generators
+
+		p += 1
+		if p == len(game['player_order']):
+			p = 0
+
+	# Now ensure everyone has an equal amount
+	generators_to_use = copy(config.GENERATORS.keys())
+	random.shuffle(generators_to_use)
+
+	for p in game['players']:
+		while sum(game['players'][p]['generators'].values()) < max_generators:
+			game['players'][p]['generators'][generators_to_use.pop()] += 1
 
 	started_players = []
 
@@ -103,12 +129,17 @@ def require_player_turn(f):
 		return f(*args, **kwargs)
 	return inner_func
 
+def has_enough_resources(player, resources):
+	for resource in resources:
+		if player['resources'][resource] < resources[resource]:
+			return False
+	return True
+
 def require_resources(resources):
 	def require_resources_inner(f):
 		def inner_func(db, game, player, *args, **kwargs):
-			for resource in resources:
-				if player['resources'][resource] < resources[resource]:
-					abort(400, 'Not enough %s' % resource)
+			if not has_enough_resources(player, resources):
+				abort(400, 'Not enough %s' % resource)
 			return f(db, game, player, *args, **kwargs)
 		return inner_func
 	return require_resources_inner
@@ -133,7 +164,12 @@ def end_game(game):
 		print "========="
 		for resource in player['resources']:
 			print "	%s:	%s" % (resource, player['resources'][resource])
-
+		print "========="
+		print "Generators"
+		print "========="
+		for generator in player['generators']:
+			print "	%s:	%s" % (generator, player['generators'][generator])
+		print "========="
 		print "Roads:	%s" % player['roads']
 		communication.request(player, "game/%s" % player['id'], method="DELETE")
 
@@ -144,3 +180,46 @@ def purchase_road(db, game, player):
 	player['roads'] += 1
 	db.save(game)
 	return {"player": player}
+
+@require_player_turn
+@require_resources(config.GENERATOR_COST)
+def purchase_generator(db, game, player):
+	# TODO: Check not over the limit
+	charge_resources(player, config.GENERATOR_COST)
+
+	generator = random.choice(config.GENERATORS.keys())
+	player['generators'][generator] += 1
+
+	db.save(game)
+	return {"player": player, 'generator_type': generator}
+
+@require_player_turn
+def trade(db, game, player, offering, requesting):
+	if not has_enough_resources(player, offering):
+		abort(400, "You don't have enough stuff!")
+
+	players = [game['players'][p] for p in game['player_order'] if not p == player['id']]
+	random.shuffle(players) # Don't give one person first refusal
+
+	print "Player ", player['id'], " offering ", offering, " for ", requesting
+
+	for p in players:
+		print "Other has ", p['resources']
+		if has_enough_resources(p, requesting):
+			print "HAS ENOUGH"
+			response, data = communication.request(p, "game/%s/trade" % player['id'], {"player": player, "offering": offering, "requesting": requesting})
+			if response.status == 200:
+				print "WAS ACCEPTED"
+				charge_resources(player, offering)
+				charge_resources(p, requesting)
+
+				for resource in offering:
+					p['resources'][resource] += offering[resource]
+
+				for resource in requesting:
+					player['resources'][resource] += requesting[resource]
+
+				db.save(game)
+				return {"player": player}
+
+	abort(500, "No bites")

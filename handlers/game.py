@@ -1,5 +1,5 @@
 from bottle import get, post
-from bottle import abort
+from bottle import abort, request
 
 from util import require_json, use_game, require_player
 from storage import use_db
@@ -39,3 +39,20 @@ def end_turn(db, game, player):
 @require_player
 def purchase_road(db, game, player):
 	return logic.purchase_road(db, game, player)
+
+@post('/game/:game_id/purchase_generator')
+@use_db
+@use_game
+@require_player
+def purchase_road(db, game, player):
+	return logic.purchase_generator(db, game, player)
+
+@post('/game/:game_id/trade')
+@require_json('offering', 'requesting')
+@use_db
+@use_game
+@require_player
+def trade(db, game, player):
+	offering = request.json['offering']
+	requesting = request.json['requesting']
+	return logic.trade(db, game, player, offering, requesting)
