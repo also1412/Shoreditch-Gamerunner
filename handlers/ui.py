@@ -25,4 +25,14 @@ def ui_start_game():
 			for i in range(int(request.POST[k])):
 				players.append(k[7:])
 
-	start_game(json={"name": request.POST['name'], "players": players})
+	game_id = start_game(json={"name": request.POST['name'], "players": players})['game_id']
+	redirect('/ui/game/' + game_id)
+
+@get('/ui/game/:game_id')
+@use_db
+@view('game.html')
+def view_game(db, game_id):
+	game = db.get(game_id)
+	if not game:
+		abort(404, "Invalid game id")
+	return {"game_id": game_id, "game_name": game['name']}

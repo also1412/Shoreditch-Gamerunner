@@ -12,6 +12,15 @@ from bottle import abort
 
 import thread
 
+import pusher
+
+pusher.app_id = config.PUSHER_APP_ID
+pusher.key = config.PUSHER_KEY
+pusher.secret = config.PUSHER_SECRET
+
+def log(game, subject, content):
+	p = pusher.Pusher()
+	p['game-' + game['id']].trigger(subject, content)
 
 def setup_player(player):
 	in_game_player = {
@@ -37,14 +46,16 @@ def run_generators(players):
 				if random.randint(1, 10) == 1:
 					player['resources'][config.GENERATORS[generator]] += 2
 
-def start_game(db, players):
+def start_game(db, name, players):
 	print "Starting game"
 	game_id = uuid4().hex
 
 	game = {
 		"id": game_id,
+		"name": name,
 		"players": {},
 		"player_order": [],
+		"turn": len(players),
 		"round": 0
 	}
 
@@ -93,15 +104,15 @@ def start_game(db, players):
 	db.save(game)
 
 	next_turn(db, game)
-	return True
+	return game_id
 
 def next_turn(db, game):
 	turn_taken = False
 	while not turn_taken: # Find the next player ready to make a move
-		print "Starting turn"
-		game['turn'] = game.get('turn', -1) + 1
+		game['turn'] = game['turn'] + 1
 
 		if game['turn'] >= len(game['player_order']):
+			log(game, 'new-round', {'round': game['round'], 'players': copy(game['players'])})
 			# Next round
 			game['round'] += 1
 			game['turn'] = 0

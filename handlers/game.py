@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from bottle import get, post
 from bottle import abort, request
 
@@ -22,7 +24,10 @@ def start_game(db, json):
 	if len(players) < MIN_PLAYERS:
 		abort(400, "Can not have less than %i players in a game" % MIN_PLAYERS)
 
-	game_id = logic.start_game(db, players)
+	if not 'name' in json:
+		json['name'] = uuid4().hex
+
+	game_id = logic.start_game(db, json['name'], players)
 
 	return {"game_id": game_id}
 

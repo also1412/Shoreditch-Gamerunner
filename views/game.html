@@ -1,0 +1,38 @@
+<h1>{{game_name}}</h1>
+
+<ul>
+
+</ul>
+
+<script id="turn" type="text/x-jquery-tmpl">
+	<li>
+		{{if $item.array}}
+			${index($item.array)} of ${$item.array.length})
+		{{/if}}
+		 <span>${getName()}</span>
+		{{if $item.showCities}}
+			Cities: {{each cities}} ${this} {{/each}}
+		{{else}}
+			No Cities
+		{{/if}}
+	</li>
+</script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+<script src="http://js.pusher.com/1.11/pusher.min.js"></script>
+
+<script>
+	var ul = $('ul');
+
+	var pusher = new Pusher('b91e1271dbcde8bb5b5d');
+	var channel = pusher.subscribe('game-{{game_id}}');
+
+	channel.bind('new-round', function(data) {
+		ul.append($('<li />', {"text": "Starting round " + data.round, "class": "round", "id": "round-" + data.round}));
+	});
+
+	channel.bind('start-turn', function(data) {
+		ul.append($('<li />', {"text": "Starting " + data.player + "'s turn", "class": "turn", "id": "round-" + data.round + "-turn-" + data.player}));
+	});
+</script>
