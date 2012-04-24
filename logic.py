@@ -30,7 +30,8 @@ def setup_player(player):
 		"generators": copy(config.DEFAULT_GENERATORS),
 		"improved_generators": copy(config.DEFAULT_GENERATORS),
 		"resources": copy(config.DEFAULT_RESOURCES),
-		"roads": 0
+		"roads": 0,
+		"victory_points": 0
 	}
 
 	return in_game_player
@@ -106,21 +107,32 @@ def start_game(db, name, players):
 	next_turn(db, game)
 	return game_id
 
+def game_is_over(game):
+	if game['round'] >= config.MAX_ROUNDS:
+		return True
+
+	for player in game['players'].values():
+		if player['victory_points'] >= config.MAX_POINTS:
+			return True
+
+	return False
+
 def next_turn(db, game):
 	turn_taken = False
 	while not turn_taken: # Find the next player ready to make a move
 		game['turn'] = game['turn'] + 1
 
 		if game['turn'] >= len(game['player_order']):
-			log(game, 'new-round', {'round': game['round'], 'players': copy(game['players'])})
 			# Next round
 			game['round'] += 1
 			game['turn'] = 0
 
 			print "Starting round %i" % game['round']
 
-			if game['round'] >= config.MAX_ROUNDS:
+			if game_is_over(game):
 				return end_game(game)
+
+			log(game, 'new-round', {'round': game['round'], 'players': copy(game['players'])})
 
 		run_generators(game['players'])
 
@@ -169,8 +181,15 @@ def end_turn(db, game, player):
 
 def end_game(game):
 	print "THE GAME HAS ENDED"
-	for player in game['players'].values():
-		print "Player %s(%s)" % (player['id'], player['player'])
+
+	def sort_players(player_id):
+		return game['players'][player_id]['victory_points']
+
+	sorted(game['player_order'], key=sort_players)
+
+	for position, p in enumerate(game['player_order'], 1):
+		player = game['players'][p]
+		print "%i Player %s(%s)" % (position, player['id'], player['player'])
 		print "Resources"
 		print "========="
 		for resource in player['resources']:
@@ -179,8 +198,12 @@ def end_game(game):
 		print "Generators"
 		print "========="
 		for generator in player['generators']:
-			print "	%s:	%s" % (generator, player['generators'][generator])
+			if player['generators'][generator] > 0:
+				print "	%s:	%s" % (generator, player['generators'][generator])
+			if player['improved_generators'][generator] > 0:
+				print "Improved	%s:	%s" % (generator, player['improved_generators'][generator])
 		print "========="
+		print "Points:	%s" % player['victory_points']
 		print "Roads:	%s" % player['roads']
 		communication.request(player, "game/%s" % player['id'], method="DELETE")
 
@@ -201,6 +224,9 @@ def purchase_generator(db, game, player):
 	generator = random.choice(config.GENERATORS.keys())
 	player['generators'][generator] += 1
 
+
+	player['victory_points'] += 1
+
 	db.save(game)
 	return {"player": player, 'generator_type': generator}
 
@@ -216,6 +242,8 @@ def upgrade_generator(db, game, player, generator_type):
 
 	player['generators'][generator_type] -= 1
 	player['improved_generators'][generator_type] += 1
+
+	player['victory_points'] += 1
 
 	db.save(game)
 	return {"player": player, 'generator_type': generator_type}
