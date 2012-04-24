@@ -195,7 +195,7 @@ def end_game(game):
 	award_bonus_points(game)
 
 	def sort_players(player_id):
-		return game['players'][player_id]['victory_points']
+		return int(game['players'][player_id]['victory_points'])
 
 	sorted(game['player_order'], key=sort_players)
 
@@ -205,7 +205,8 @@ def end_game(game):
 		print "Resources"
 		print "========="
 		for resource in player['resources']:
-			print "	%s:	%s" % (resource, player['resources'][resource])
+			if player['resources'][resource] > 0:
+				print "	%s:	%s" % (resource, player['resources'][resource])
 		print "========="
 		print "Generators"
 		print "========="
