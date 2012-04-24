@@ -127,10 +127,11 @@ def next_turn(db, game):
 			game['round'] += 1
 			game['turn'] = 0
 
-			print "Starting round %i" % game['round']
-
 			if game_is_over(game):
 				return end_game(game)
+
+			print "Starting round %i" % game['round']
+			game['player_order'].reverse()
 
 			log(game, 'new-round', {'round': game['round'], 'players': copy(game['players'])})
 
@@ -206,18 +207,18 @@ def end_game(game):
 		print "========="
 		for resource in player['resources']:
 			if player['resources'][resource] > 0:
-				print "	%s:	%s" % (resource, player['resources'][resource])
+				print "	%s:			%s" % (resource, player['resources'][resource])
 		print "========="
 		print "Generators"
 		print "========="
 		for generator in player['generators']:
 			if player['generators'][generator] > 0:
-				print "	%s:	%s" % (generator, player['generators'][generator])
+				print "	%s:			%s" % (generator, player['generators'][generator])
 			if player['improved_generators'][generator] > 0:
-				print "Improved	%s:	%s" % (generator, player['improved_generators'][generator])
+				print "	Improved %s:			%s" % (generator, player['improved_generators'][generator])
 		print "========="
-		print "Points:	%s" % player['victory_points']
-		print "Roads:	%s" % player['roads']
+		print "Roads:			%s" % player['roads']
+		print "Points:			%s" % player['victory_points']
 		communication.request(player, "game/%s" % player['id'], method="DELETE")
 
 @require_player_turn
