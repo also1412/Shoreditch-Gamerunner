@@ -179,8 +179,20 @@ def end_turn(db, game, player):
 	thread.start_new_thread(run_end_turn, ())
 	return {"status": "success"}
 
+def award_bonus_points(game):
+	max_roads = 0
+	for player in game['players'].values():
+		if player.get('roads',0) > max_roads:
+			max_roads = player['roads']
+	
+	for player in game['players'].values():
+		if player.get('roads') == max_roads:
+			player['victory_points'] += 2
+
 def end_game(game):
 	print "THE GAME HAS ENDED"
+
+	award_bonus_points(game)
 
 	def sort_players(player_id):
 		return game['players'][player_id]['victory_points']
