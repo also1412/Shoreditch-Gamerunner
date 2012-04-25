@@ -18,7 +18,7 @@ pusher.app_id = config.PUSHER_APP_ID
 pusher.key = config.PUSHER_KEY
 pusher.secret = config.PUSHER_SECRET
 
-def log(game, subject, content):
+def push(game, subject, content):
 	p = pusher.Pusher()
 	p['game-' + game['id']].trigger(subject, content)
 
@@ -134,7 +134,7 @@ def next_turn(db, game):
 			print "Starting round %i" % game['round']
 			game['player_order'].reverse()
 
-			log(game, 'new-round', {'round': game['round'], 'players': copy(game['players'])})
+			push(game, 'new-round', {'round': game['round'], 'players': copy(game['players'])})
 
 		run_generators(game['players'])
 
@@ -295,3 +295,7 @@ def trade(db, game, player, offering, requesting):
 				return {"player": player}
 
 	abort(500, "No bites")
+
+@require_player_turn
+def log(db, game, player, message):
+	push(game, 'log', {'player': player, 'message': message})

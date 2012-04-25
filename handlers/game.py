@@ -70,3 +70,12 @@ def trade(db, game, player):
 	offering = request.json['offering']
 	requesting = request.json['requesting']
 	return logic.trade(db, game, player, offering, requesting)
+
+@post('/game/:game_id/log')
+@require_json('message')
+@use_db
+@use_game
+@require_player
+def log(db, game, player):
+	message = request.json['message']
+	return logic.log(db, game, player, message)
