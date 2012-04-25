@@ -25,6 +25,7 @@ def log(game, subject, content):
 def setup_player(player):
 	in_game_player = {
 		"id": uuid4().hex,
+		"secret": uuid4().hex,
 		"player": player['id'],
 		"endpoint": player['endpoint'],
 		"generators": copy(config.DEFAULT_GENERATORS),
@@ -149,8 +150,10 @@ def next_turn(db, game):
 			print "Turn skipped"
 
 def require_player_turn(f):
-	def inner_func(*args, **kwargs):
-		return f(*args, **kwargs)
+	def inner_func(db, game, player, *args, **kwargs):
+		if player['id'] != game['player_order'][game['turn']]:
+			abort(400, 'It is not your turn')
+		return f(db, game, player, *args, **kwargs)
 	return inner_func
 
 def has_enough_resources(player, resources):

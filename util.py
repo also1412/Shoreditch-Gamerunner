@@ -45,6 +45,13 @@ def require_player(f):
 			abort(400, "Player not part of game")
 
 		player = game['players'][player_id]
+
+		if not 'secret' in kwargs['json']:
+			abort(400, "Must pass secret")
+
+		if not kwargs['json']['secret'] == player['secret']:
+			abort(400, "Incorrect secret")
+		
 		del kwargs['json']
 		return f(db, game, player, *args, **kwargs)
 	return inner_func
