@@ -1,20 +1,50 @@
 <h1>{{game_name}}</h1>
 
-<ul>
+<ul id="game">
 
 </ul>
 
+<script id="round" type="text/x-jquery-tmpl">
+	<li id="round_${data.round}">
+		<h1>Round ${data.round}</h1>
+		<ul class="round_actions"></ul>
+	</li>
+</script>
+
 <script id="turn" type="text/x-jquery-tmpl">
-	<li>
-		{{if $item.array}}
-			${index($item.array)} of ${$item.array.length})
-		{{/if}}
-		 <span>${getName()}</span>
-		{{if $item.showCities}}
-			Cities: {{each cities}} ${this} {{/each}}
-		{{else}}
-			No Cities
-		{{/if}}
+	<li class="turn_${data.turn}">
+		<h2>${data.player.player}s turn</h2>
+		<ul class="turn_actions"></ul>
+	</li>
+</script>
+
+<script id="purchase-generator" type="text/x-jquery-tmpl">
+	<li class="purchase_generator">
+		Someone purchased something
+	</li>
+</script>
+
+<script id="upgrade-generator" type="text/x-jquery-tmpl">
+	<li class="upgrade_generator">
+		Someone upgraded something
+	</li>
+</script>
+
+<script id="purchase-road" type="text/x-jquery-tmpl">
+	<li class="purchase_road">
+		Someone purchased a road
+	</li>
+</script>
+
+<script id="trade" type="text/x-jquery-tmpl">
+	<li class="trade">
+		Someone traded with someone else.
+	</li>
+</script>
+
+<script id="end" type="text/x-jquery-tmpl">
+	<li class="end_game">
+		<h1>The game is over</h1>
 	</li>
 </script>
 
@@ -23,16 +53,35 @@
 <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
 
 <script>
-	var ul = $('ul');
+	
+	function add_to_turn(round, turn, el) {
+		$('#round_' + round + ' .turn_' + turn + ' .turn_actions').append(el)
+	}
 
 	var pusher = new Pusher('b91e1271dbcde8bb5b5d');
 	var channel = pusher.subscribe('game-{{game_id}}');
 
 	channel.bind('new-round', function(data) {
-		ul.append($('<li />', {"text": "Starting round " + data.round, "class": "round", "id": "round-" + data.round}));
+		$('#game').append($('#round').tmpl({"data": data}));
 	});
 
 	channel.bind('start-turn', function(data) {
-		ul.append($('<li />', {"text": "Starting " + data.player + "'s turn", "class": "turn", "id": "round-" + data.round + "-turn-" + data.player}));
+		$('#round_' + data.round + ' .round_actions').append($('#turn').tmpl({'data': data}));
+	});
+
+	channel.bind('purchase-generator', function(data) {
+		add_to_turn(data.round, data.turn, $('#purchase_generator').tmpl({'data': data}))
+	});
+	channel.bind('upgrade-generator', function(data) {
+		add_to_turn(data.round, data.turn, $('#upgrade_generator').tmpl({'data': data}))
+	});
+	channel.bind('purchase-road', function(data) {
+		add_to_turn(data.round, data.turn, $('#purchase_road').tmpl({'data': data}))
+	});
+	channel.bind('trade', function(data) {
+		add_to_turn(data.round, data.turn, $('#trade').tmpl({'data': data}))
+	});
+	channel.bind('end', function(data) {
+		$('#game').append($('#end').tmpl({"data": data}));
 	});
 </script>
