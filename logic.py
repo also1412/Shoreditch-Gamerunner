@@ -197,14 +197,14 @@ def award_bonus_points(game):
 			player['victory_points'] += 2
 
 def end_game(game):
-	print "THE GAME HAS ENDED"
-
 	award_bonus_points(game)
 
 	def sort_players(player_id):
 		return int(game['players'][player_id]['victory_points'])
 
 	sorted(game['player_order'], key=sort_players)
+
+	push(game, 'end', {"game": game})
 
 	for position, p in enumerate(game['player_order'], 1):
 		player = game['players'][p]
