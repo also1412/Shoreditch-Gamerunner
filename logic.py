@@ -233,6 +233,7 @@ def purchase_road(db, game, player):
 	charge_resources(player, config.ROAD_COST)
 	player['roads'] += 1
 	db.save(game)
+	push(game, 'purchase-road', {"round": game['round'], "turn": game['turn'], "player": player})
 	return {"player": player}
 
 @require_player_turn
@@ -281,13 +282,14 @@ def trade(db, game, player, offering, requesting):
 
 	print "Player ", player['id'], " offering ", offering, " for ", requesting
 
+	trade_id = uuid4().hex
+
+	push(game, 'trade', {"round": game['round'], "turn": game['turn'], "player": player, 'offering': offering, 'requesting': requesting, "trade_id": trade_id})
+
 	for p in players:
-		print "Other has ", p['resources']
 		if has_enough_resources(p, requesting):
-			print "HAS ENOUGH"
 			response, data = communication.request(p, "game/%s/trade" % player['id'], {"player": player, "offering": offering, "requesting": requesting})
 			if response.status == 200:
-				print "WAS ACCEPTED"
 				charge_resources(player, offering)
 				charge_resources(p, requesting)
 
@@ -297,9 +299,15 @@ def trade(db, game, player, offering, requesting):
 				for resource in requesting:
 					player['resources'][resource] += requesting[resource]
 
+				push(game, 'trade-accepted', {"trade_id": trade_id, "player": p})
+
 				db.save(game)
+
+
+
 				return {"player": player}
 
+	push(game, 'trade-rejected', {"trade_id": trade_id})
 	abort(500, "No bites")
 
 @require_player_turn

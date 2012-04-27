@@ -39,14 +39,42 @@
 
 <script id="purchase-road" type="text/x-jquery-tmpl">
 	<li class="purchase_road">
-		Someone purchased a road
+		${data.player.player} purchased a road
 	</li>
 </script>
 
 <script id="trade" type="text/x-jquery-tmpl">
-	<li class="trade">
-		Someone traded with someone else.
+	<li class="trade pending" id="trade_${data.trade_id}">
+		${data.player.player} is offering to trade.
+		<ul class="offering">{\\
+			% pass
+{each(offer, amount) data.offering}}
+				<li>${amount}x ${offer}</li>
+			{\\
+			% pass
+{/each}}
+		</ul>
+
+		for
+
+		<ul class="requesting">
+			{\\
+			% pass
+{each(request, amount) data.requesting}}
+				<li>${amount}x ${request}</li>
+			{\\
+			% pass
+{/each}}
+		</ul>
+
+		<div class="result">
+			The other players are considering the offer
+		</div>
 	</li>
+</script>
+
+<script id="trade-accepted" type="text/x-jquery-tmpl">
+	The trade was accepted by ${data.player.player}
 </script>
 
 <script id="end" type="text/x-jquery-tmpl">
@@ -91,6 +119,16 @@
 	});
 	channel.bind('trade', function(data) {
 		add_to_turn(data.round, data.turn, $('#trade').tmpl({'data': data}))
+	});
+	channel.bind('trade-rejected', function(data) {
+		var div = $('#trade_' + data.trade_id);
+		div.removeClass('pending').addClass('rejected')
+		div.find('.result').text('The trade was rejected')
+	});
+	channel.bind('trade-accepted', function(data) {
+		var div = $('#trade_' + data.trade_id);
+		div.removeClass('pending').addClass('accepted')
+		div.find('.result').html($('#trade-accepted').tmpl({'data': data}))
 	});
 	channel.bind('end', function(data) {
 		$('#game').append($('#end').tmpl({"data": data}));
