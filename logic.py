@@ -244,10 +244,11 @@ def purchase_generator(db, game, player):
 	generator = random.choice(config.GENERATORS.keys())
 	player['generators'][generator] += 1
 
-
 	player['victory_points'] += 1
 
 	db.save(game)
+
+	push(game, 'purchase-generator', {"round": game['round'], "turn": game['turn'], "player": player, 'generator_type': generator})
 	return {"player": player, 'generator_type': generator}
 
 @require_player_turn

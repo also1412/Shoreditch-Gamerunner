@@ -26,8 +26,8 @@
 </script>
 
 <script id="purchase-generator" type="text/x-jquery-tmpl">
-	<li class="purchase_generator">
-		Someone purchased something
+	<li class="purchase_generator generator_${data.generator_type}">
+		${data.player.player} purchased a ${data.generator_type}
 	</li>
 </script>
 
@@ -81,13 +81,13 @@
 	});
 
 	channel.bind('purchase-generator', function(data) {
-		add_to_turn(data.round, data.turn, $('#purchase_generator').tmpl({'data': data}))
+		add_to_turn(data.round, data.turn, $('#purchase-generator').tmpl({'data': data}))
 	});
 	channel.bind('upgrade-generator', function(data) {
-		add_to_turn(data.round, data.turn, $('#upgrade_generator').tmpl({'data': data}))
+		add_to_turn(data.round, data.turn, $('#upgrade-generator').tmpl({'data': data}))
 	});
 	channel.bind('purchase-road', function(data) {
-		add_to_turn(data.round, data.turn, $('#purchase_road').tmpl({'data': data}))
+		add_to_turn(data.round, data.turn, $('#purchase-road').tmpl({'data': data}))
 	});
 	channel.bind('trade', function(data) {
 		add_to_turn(data.round, data.turn, $('#trade').tmpl({'data': data}))
