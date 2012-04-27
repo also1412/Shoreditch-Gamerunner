@@ -84,4 +84,10 @@
 	channel.bind('end', function(data) {
 		$('#game').append($('#end').tmpl({"data": data}));
 	});
+
+	var pushes = {{!pushes}}
+
+	for (var i in pushes) {
+		pusher.channels.channels['game-{{game_id}}'].emit(pushes[i][0], pushes[i][1]);
+	}
 </script>

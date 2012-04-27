@@ -19,6 +19,7 @@ pusher.key = config.PUSHER_KEY
 pusher.secret = config.PUSHER_SECRET
 
 def push(game, subject, content):
+	game['pushes'].append([subject, content])
 	p = pusher.Pusher()
 	p['game-' + game['id']].trigger(subject, content)
 
@@ -58,7 +59,8 @@ def start_game(db, name, players):
 		"players": {},
 		"player_order": [],
 		"turn": len(players),
-		"round": 0
+		"round": 0,
+		"pushes": []
 	}
 
 	for player in players:

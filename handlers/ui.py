@@ -1,3 +1,5 @@
+import json
+
 from bottle import get, post
 from bottle import view, redirect, abort
 from bottle import request
@@ -6,6 +8,7 @@ from storage import use_db
 
 from admin import list_players, add_player
 from game import start_game
+
 
 @get('/ui/')
 @view('index.html')
@@ -35,4 +38,4 @@ def view_game(db, game_id):
 	game = db.get(game_id)
 	if not game:
 		abort(404, "Invalid game id")
-	return {"game_id": game_id, "game_name": game['name']}
+	return {"game_id": game_id, "game_name": game['name'], "pushes": json.dumps(game['pushes'])}
