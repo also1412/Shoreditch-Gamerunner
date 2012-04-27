@@ -267,6 +267,8 @@ def upgrade_generator(db, game, player, generator_type):
 	player['victory_points'] += 1
 
 	db.save(game)
+
+	push(game, 'upgrade-generator', {"round": game['round'], "turn": game['turn'], "player": player, 'generator_type': generator_type})
 	return {"player": player, 'generator_type': generator_type}
 
 @require_player_turn
