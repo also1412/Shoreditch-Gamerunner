@@ -142,6 +142,8 @@ def next_turn(db, game):
 
 		player = game['players'][game['player_order'][game['turn']]] # Wow - nice line
 
+		push(game, 'start-turn', {'player': player, 'turn': game['turn'], 'round': game['round']})
+
 		response, data = communication.request(player, "game/%s/start_turn" % player['id'])
 
 		db.save(game)
