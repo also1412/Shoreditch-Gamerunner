@@ -142,16 +142,15 @@ def next_turn(db, game):
 
 		player = game['players'][game['player_order'][game['turn']]] # Wow - nice line
 
-		push(game, 'start-turn', {'player': player, 'turn': game['turn'], 'round': game['round']})
-
 		response, data = communication.request(player, "game/%s/start_turn" % player['id'])
 
 		db.save(game)
 
 		if response.status == 200:
 			turn_taken = True
+			push(game, 'start-turn', {'player': player, 'turn': game['turn'], 'round': game['round']})
 		else:
-			print "Turn skipped"
+			push(game, 'turn-skipped', {'player': player, 'turn': game['turn'], 'round': game['round']})
 
 def require_player_turn(f):
 	def inner_func(db, game, player, *args, **kwargs):

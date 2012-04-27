@@ -18,6 +18,13 @@
 	</li>
 </script>
 
+<script id="turn-skipped" type="text/x-jquery-tmpl">
+	<li class="skipped turn_${data.turn}">
+		<h2>${data.player.player}s skipped their turn</h2>
+		<ul class="turn_actions"></ul>
+	</li>
+</script>
+
 <script id="purchase-generator" type="text/x-jquery-tmpl">
 	<li class="purchase_generator">
 		Someone purchased something
@@ -66,6 +73,10 @@
 	});
 
 	channel.bind('start-turn', function(data) {
+		$('#round_' + data.round + ' .round_actions').append($('#turn').tmpl({'data': data}));
+	});
+
+	channel.bind('turn-skipped', function(data) {
 		$('#round_' + data.round + ' .round_actions').append($('#turn').tmpl({'data': data}));
 	});
 
