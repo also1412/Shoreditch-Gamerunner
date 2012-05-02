@@ -4,6 +4,66 @@
 
 </ul>
 
+<script id="round-generated" type="text/x-jquery-tmpl">
+	<li id="round_${data.round}">
+		<h1>Round ${data.round}</h1>
+				<ul>{\\
+			%pass
+{each(id, player) data.generated}}
+				{\\
+					%pass
+{each(resource,amount) resources}}
+	<li>${name} got ${amount}x ${resource}</li>
+{\\
+%pass
+{/each}}
+{\\
+%pass
+{/each}}
+
+		</ul>
+
+		<ul class="players">{\\
+			%pass
+{each(id, player) data.players}}
+				<li class="player_${id}">
+					<h3>${player}</h3>
+					<ul class="generators">{\\
+						%pass
+{each(resource, amount) generators}}
+						<li>${amount}x ${resource}</li>
+						{\\
+						%pass
+{/each}}
+					</ul>
+					<ul class="improved_generators">{\\
+						%pass
+{each(resource, amount) improved_generators}}
+						<li>${amount}x ${resource}</li>
+						{\\
+						%pass
+{/each}}
+					</ul>
+
+					<ul class="resources">{\\
+						%pass
+{each(resource, amount) resources}}
+						<li>${amount}x ${resource}</li>
+						{\\
+						%pass
+{/each}}
+					</ul>
+					<span class="victory_points">${victory_points} Points</span>
+					<span class="roads">${roads} Roads</span>
+				</li>
+				{\\
+				%pass
+{/each}}
+		</ul>
+		<ul class="round_actions"></ul>
+	</li>
+</script>
+
 <script id="round" type="text/x-jquery-tmpl">
 	<li id="round_${data.round}">
 		<h1>Round ${data.round}</h1>
@@ -177,7 +237,11 @@
 	var channel = pusher.subscribe('game-{{game_id}}');
 
 	channel.bind('new-round', function(data) {
-		$('#game').append($('#round').tmpl({"data": data}));
+		if ('generated' in data) {
+			$('#game').append($('#round-generated').tmpl({"data": data}));
+		} else {
+			$('#game').append($('#round').tmpl({"data": data}));
+		}
 	});
 
 	channel.bind('start-turn', function(data) {
@@ -215,7 +279,6 @@
 		$('#game').append($('#award-bonus').tmpl({"data": data}));
 	});
 	channel.bind('end', function(data) {
-		console.log(data);
 		$('#game').append($('#end').tmpl({"data": data}));
 	});
 

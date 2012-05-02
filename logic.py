@@ -39,15 +39,29 @@ def setup_player(player):
 	return in_game_player
 
 def run_generators(players):
+	awarded = {}
+
+	def award(player, generator, amount=1):
+		generated = config.GENERATORS[generator]
+		player['resources'][generated] += 1
+
+		if not player['id'] in awarded:
+			awarded[player['id']] = {"name": player['player'], "resources": {}}
+		if not generated in awarded[player['id']]["resources"]:
+			awarded[player['id']]["resources"][generated] = 0
+
+		awarded[player['id']]["resources"][generated] += amount
+
 	for player in players.values():
 		for generator in player['generators']:
 			for i in range(player['generators'][generator]):
 				if random.randint(1, 10) == 1:
-					player['resources'][config.GENERATORS[generator]] += 1
+					award(player, generator)
 		for generator in player['improved_generators']:
 			for i in range(player['improved_generators'][generator]):
 				if random.randint(1, 10) == 1:
-					player['resources'][config.GENERATORS[generator]] += 2
+					award(player, generator, 2)
+	return awarded
 
 def start_game(db, name, players):
 	print "Starting game"
@@ -136,9 +150,12 @@ def next_turn(db, game):
 			print "Starting round %i" % game['round']
 			game['player_order'].reverse()
 
-			push(game, 'new-round', {'round': game['round'], 'players': copy(game['players'])})
+			generated = run_generators(game['players'])
+			if len(generated.keys()) > 0:
+				push(game, 'new-round', {'round': game['round'], 'players': copy(game['players']), "generated": generated})
+			else:
+				push(game, 'new-round', {'round': game['round'], 'players': copy(game['players'])})
 
-		run_generators(game['players'])
 
 		player = game['players'][game['player_order'][game['turn']]] # Wow - nice line
 
