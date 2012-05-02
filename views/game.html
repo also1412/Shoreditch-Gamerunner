@@ -44,8 +44,6 @@
 				%pass
 {/each}}
 		</ul>
-
-		</ul>
 		<ul class="round_actions"></ul>
 	</li>
 </script>
@@ -116,9 +114,52 @@
 	The trade was accepted by ${data.player.player}
 </script>
 
+<script id="award-bonus" type="text/x-jquery-tmpl">
+	<li class="bonus">
+		<p>${data.player.player} was awarded ${data.points} bonus points.</p>
+	</li>
+</script>
+
 <script id="end" type="text/x-jquery-tmpl">
 	<li class="end_game">
 		<h1>The game is over</h1>
+		<ul class="players">{\\
+			%pass
+{each(id, player) data.players}}
+				<li class="player_${id}">
+					<h3>${player}</h3>
+					<ul class="generators">{\\
+						%pass
+{each(resource, amount) generators}}
+						<li>${amount}x ${resource}</li>
+						{\\
+						%pass
+{/each}}
+					</ul>
+					<ul class="improved_generators">{\\
+						%pass
+{each(resource, amount) improved_generators}}
+						<li>${amount}x ${resource}</li>
+						{\\
+						%pass
+{/each}}
+					</ul>
+
+					<ul class="resources">{\\
+						%pass
+{each(resource, amount) resources}}
+						<li>${amount}x ${resource}</li>
+						{\\
+						%pass
+{/each}}
+					</ul>
+					<span class="victory_points">${victory_points} Points</span>
+					<span class="roads">${roads} Roads</span>
+				</li>
+				{\\
+				%pass
+{/each}}
+		</ul>
 	</li>
 </script>
 
@@ -150,6 +191,7 @@
 	channel.bind('purchase-generator', function(data) {
 		add_to_turn(data.round, data.turn, $('#purchase-generator').tmpl({'data': data}))
 	});
+
 	channel.bind('upgrade-generator', function(data) {
 		add_to_turn(data.round, data.turn, $('#upgrade-generator').tmpl({'data': data}))
 	});
@@ -169,7 +211,11 @@
 		div.removeClass('pending').addClass('accepted')
 		div.find('.result').html($('#trade-accepted').tmpl({'data': data}))
 	});
+	channel.bind('award-bons', function(data) {
+		$('#game').append($('#award-bonus').tmpl({"data": data}));
+	});
 	channel.bind('end', function(data) {
+		console.log(data);
 		$('#game').append($('#end').tmpl({"data": data}));
 	});
 

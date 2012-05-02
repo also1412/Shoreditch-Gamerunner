@@ -195,6 +195,7 @@ def award_bonus_points(game):
 	for player in game['players'].values():
 		if player.get('roads') == max_roads:
 			player['victory_points'] += 2
+			push(game, 'award-bonus', {"points": 2, "player": player})
 
 def end_game(game):
 	award_bonus_points(game)
@@ -202,29 +203,11 @@ def end_game(game):
 	def sort_players(player_id):
 		return int(game['players'][player_id]['victory_points'])
 
-	sorted(game['player_order'], key=sort_players)
+	game['player_order'] = sorted(game['player_order'], key=sort_players, reverse=True)
 
-	push(game, 'end', {"game": game})
+	push(game, 'end', {"players": [game['players'][p] for p in game['player_order']]})
 
-	for position, p in enumerate(game['player_order'], 1):
-		player = game['players'][p]
-		print "%i Player %s(%s)" % (position, player['id'], player['player'])
-		print "Resources"
-		print "========="
-		for resource in player['resources']:
-			if player['resources'][resource] > 0:
-				print "	%s:			%s" % (resource, player['resources'][resource])
-		print "========="
-		print "Generators"
-		print "========="
-		for generator in player['generators']:
-			if player['generators'][generator] > 0:
-				print "	%s:			%s" % (generator, player['generators'][generator])
-			if player['improved_generators'][generator] > 0:
-				print "	Improved %s:			%s" % (generator, player['improved_generators'][generator])
-		print "========="
-		print "Roads:			%s" % player['roads']
-		print "Points:			%s" % player['victory_points']
+	for player in game['players'].values():
 		communication.request(player, "game/%s" % player['id'], method="DELETE")
 
 @require_player_turn
