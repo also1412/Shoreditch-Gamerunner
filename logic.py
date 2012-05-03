@@ -318,6 +318,20 @@ def trade(db, game, player, offering, requesting):
 
 				return {"player": player}
 
+	# No bites, see if it's good enough for a bank trade
+
+	if sum(offering.values()) >= (sum(requesting.values()) * config.BANK_TRADE_RATE):
+		# The bank will take the trade
+		charge_resources(player, offering)
+		for resource in requesting:
+			player['resources'][resource] += requesting[resource]
+
+		push(game, 'trade-bank-accepted', {"trade_id": trade_id})
+
+		db.save(game)
+
+		return {"player": player}
+
 	push(game, 'trade-rejected', {"trade_id": trade_id})
 	abort(500, "No bites")
 
