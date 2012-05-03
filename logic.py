@@ -212,7 +212,7 @@ def award_bonus_points(game):
 	for player in game['players'].values():
 		if player.get('pr') == max_pr:
 			player['customers'] += 2
-			push(game, 'award-bonus', {"points": 2, "player": player})
+			push(game, 'award-bonus', {"customers": 2, "player": player})
 
 def end_game(game):
 	award_bonus_points(game)

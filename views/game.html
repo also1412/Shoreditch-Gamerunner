@@ -176,7 +176,7 @@
 
 <script id="award-bonus" type="text/x-jquery-tmpl">
 	<li class="bonus">
-		<p>${data.player.player} was awarded ${data.points} bonus points.</p>
+		<p>${data.player.player} got ${data.customers} extra customers through PR.</p>
 	</li>
 </script>
 
@@ -213,7 +213,7 @@
 						%pass
 {/each}}
 					</ul>
-					<span class="customers">${customers} points</span>
+					<span class="customers">${customers} customers</span>
 					<span class="pr">${pr} PR</span>
 				</li>
 				{\\
@@ -275,7 +275,7 @@
 		div.removeClass('pending').addClass('accepted')
 		div.find('.result').html($('#trade-accepted').tmpl({'data': data}))
 	});
-	channel.bind('award-bons', function(data) {
+	channel.bind('award-bonus', function(data) {
 		$('#game').append($('#award-bonus').tmpl({"data": data}));
 	});
 	channel.bind('end', function(data) {
