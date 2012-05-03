@@ -247,7 +247,9 @@ def purchase_pr(db, game, player):
 @require_player_turn
 @require_resources(config.GENERATOR_COST)
 def purchase_generator(db, game, player):
-	# TODO: Check not over the limit
+	if sum(player['generators'].values()) >= config.MAX_RESOURCE_GENERATORS:
+		abort(400, "You can't build any more generators")
+
 	charge_resources(player, config.GENERATOR_COST)
 
 	generator = random.choice(config.GENERATORS.keys())
@@ -263,7 +265,8 @@ def purchase_generator(db, game, player):
 @require_player_turn
 @require_resources(config.GENERATOR_IMPROVEMENT_COST)
 def upgrade_generator(db, game, player, generator_type):
-	# TODO: Check not over the limit
+	if sum(player['improved_generators'].values()) >= config.MAX_IMPROVED_RESOURCE_GENERATORS:
+		abort(400, "You can't build any more generators")
 
 	if player['generators'][generator_type] < 1:
 		abort(400, "You don't have enough %s" % generator_type)
