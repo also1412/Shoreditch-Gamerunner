@@ -26,6 +26,15 @@ def push(game, subject, content):
 	p = pusher.Pusher()
 	p['game-' + game['id']].trigger(subject, content)
 
+def log_action(game, player, action, data={}):
+	data['action'] = action
+	for p in game['players'].values():
+		if not p['id'] == player['id']:
+			# Log it for this user
+			if not player['id'] in p['actions']:
+				p['actions'][player['id']] = []
+			p['actions'][player['id']].append(data)
+
 def setup_player(player):
 	in_game_player = {
 		"id": uuid4().hex,
@@ -37,7 +46,8 @@ def setup_player(player):
 		"improved_generators": copy(config.DEFAULT_GENERATORS),
 		"resources": copy(config.DEFAULT_RESOURCES),
 		"pr": 0,
-		"customers": 0
+		"customers": 0,
+		"actions": {}
 	}
 
 	return in_game_player
@@ -172,9 +182,9 @@ def next_turn(db, game):
 
 		response, data = communication.request(player, "game/%s/start_turn" % player['id'])
 
-		db.save(game)
-
 		if response.status == 200:
+			player['actions'] = {}
+			db.save(game)
 			turn_taken = True
 			push(game, 'start-turn', {'player': player, 'turn': game['turn'], 'round': game['round']})
 
@@ -185,6 +195,8 @@ def next_turn(db, game):
 			turn_timeout = Timer(config.TURN_TIMEOUT, force_turn_end)
 			turn_timeout.start()
 		else:
+			db.save(game)
+			log_action(game, player, 'turn-skipped')
 			push(game, 'turn-skipped', {'player': player, 'turn': game['turn'], 'round': game['round']})
 
 def require_player_turn(f):
@@ -257,6 +269,7 @@ def purchase_pr(db, game, player):
 	charge_resources(player, config.PR_COST)
 	player['pr'] += 1
 	db.save(game)
+	log_action(game, player, 'purchase-pr')
 	push(game, 'purchase-pr', {"round": game['round'], "turn": game['turn'], "player": player})
 	return {"player": player}
 
@@ -275,6 +288,7 @@ def purchase_generator(db, game, player):
 
 	db.save(game)
 
+	log_action(game, player, 'award-generator', {"generator_type": generator})
 	push(game, 'purchase-generator', {"round": game['round'], "turn": game['turn'], "player": player, 'generator_type': generator})
 	return {"player": player, 'generator_type': generator}
 
@@ -296,6 +310,7 @@ def upgrade_generator(db, game, player, generator_type):
 
 	db.save(game)
 
+	log_action(game, player, 'upgrade-generator', {"generator_type": generator_type})
 	push(game, 'upgrade-generator', {"round": game['round'], "turn": game['turn'], "player": player, 'generator_type': generator_type})
 	return {"player": player, 'generator_type': generator_type}
 
@@ -326,11 +341,10 @@ def trade(db, game, player, offering, requesting):
 				for resource in requesting:
 					player['resources'][resource] += requesting[resource]
 
+				log_action(game, player, 'trade', {"offer": offering, "request": requesting, "traded_with": p})
 				push(game, 'trade-accepted', {"trade_id": trade_id, "player": p})
 
 				db.save(game)
-
-
 
 				return {"player": player}
 
@@ -342,12 +356,14 @@ def trade(db, game, player, offering, requesting):
 		for resource in requesting:
 			player['resources'][resource] += requesting[resource]
 
+		log_action(game, player, 'bank-trade', {"offer": offering, "request": requesting})
 		push(game, 'trade-bank-accepted', {"trade_id": trade_id})
 
 		db.save(game)
 
 		return {"player": player}
 
+	log_action(game, player, 'trade-rejected', {"offer": offering, "request": requesting})
 	push(game, 'trade-rejected', {"trade_id": trade_id})
 	abort(500, "No bites")
 
