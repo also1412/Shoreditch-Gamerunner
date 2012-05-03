@@ -140,6 +140,12 @@
 	</li>
 </script>
 
+<script id="timeout" type="text/x-jquery-tmpl">
+	<li class="purchase_pr">
+		${data.player.name} ran out of time!
+	</li>
+</script>
+
 <script id="trade" type="text/x-jquery-tmpl">
 	<li class="trade pending" id="trade_${data.trade_id}">
 		${data.player.name} is offering to trade.
@@ -265,6 +271,9 @@
 	});
 	channel.bind('purchase-pr', function(data) {
 		add_to_turn(data.round, data.turn, $('#purchase-pr').tmpl({'data': data}))
+	});
+	channel.bind('timeout', function(data) {
+		add_to_turn(data.round, data.turn, $('#timeout').tmpl({'data': data}))
 	});
 	channel.bind('trade', function(data) {
 		add_to_turn(data.round, data.turn, $('#trade').tmpl({'data': data}))

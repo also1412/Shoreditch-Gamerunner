@@ -222,6 +222,7 @@ def end_turn(db, game, player, forced=False):
 	if turn_timeout:
 		turn_timeout.cancel()
 	if forced:
+		push(game, 'timeout', {'player': player, 'turn': game['turn'], 'round': game['round']})
 		communication.request(player, "game/%s/end_turn" % player['id'])
 	thread.start_new_thread(run_end_turn, ())
 	return {"status": "success"}
