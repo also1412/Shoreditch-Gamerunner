@@ -27,7 +27,7 @@
 			%pass
 {each(id, player) data.players}}
 				<li class="player_${id}">
-					<h3>${player}</h3>
+					<h3>${name}</h3>
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
@@ -71,7 +71,7 @@
 			%pass
 {each(id, player) data.players}}
 				<li class="player_${id}">
-					<h3>${player}</h3>
+					<h3>${name}</h3>
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
@@ -110,39 +110,39 @@
 
 <script id="turn" type="text/x-jquery-tmpl">
 	<li class="turn_${data.turn}">
-		<h2>${data.player.player}s turn</h2>
+		<h2>${data.player.name}s turn</h2>
 		<ul class="turn_actions"></ul>
 	</li>
 </script>
 
 <script id="turn-skipped" type="text/x-jquery-tmpl">
 	<li class="skipped turn_${data.turn}">
-		<h2>${data.player.player}s skipped their turn</h2>
+		<h2>${data.player.name}s skipped their turn</h2>
 		<ul class="turn_actions"></ul>
 	</li>
 </script>
 
 <script id="purchase-generator" type="text/x-jquery-tmpl">
 	<li class="purchase_generator generator_${data.generator_type}">
-		${data.player.player} purchased a ${data.generator_type}
+		${data.player.name} purchased a ${data.generator_type}
 	</li>
 </script>
 
 <script id="upgrade-generator" type="text/x-jquery-tmpl">
 	<li class="upgrade_generator upgrade_${data.generator_type}">
-		${data.player.player} upgraded a ${data.generator_type}
+		${data.player.name} upgraded a ${data.generator_type}
 	</li>
 </script>
 
 <script id="purchase-pr" type="text/x-jquery-tmpl">
 	<li class="purchase_pr">
-		${data.player.player} purchased a pr
+		${data.player.name} purchased a pr
 	</li>
 </script>
 
 <script id="trade" type="text/x-jquery-tmpl">
 	<li class="trade pending" id="trade_${data.trade_id}">
-		${data.player.player} is offering to trade.
+		${data.player.name} is offering to trade.
 		<ul class="offering">{\\
 			% pass
 {each(offer, amount) data.offering}}
@@ -171,12 +171,12 @@
 </script>
 
 <script id="trade-accepted" type="text/x-jquery-tmpl">
-	The trade was accepted by ${data.player.player}
+	The trade was accepted by ${data.player.name}
 </script>
 
 <script id="award-bonus" type="text/x-jquery-tmpl">
 	<li class="bonus">
-		<p>${data.player.player} got ${data.customers} extra customers through PR.</p>
+		<p>${data.player.name} got ${data.customers} extra customers through PR.</p>
 	</li>
 </script>
 
@@ -187,7 +187,7 @@
 			%pass
 {each(id, player) data.players}}
 				<li class="player_${id}">
-					<h3>${player}</h3>
+					<h3>${name}</h3>
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}

@@ -28,6 +28,7 @@ def setup_player(player):
 		"id": uuid4().hex,
 		"secret": uuid4().hex,
 		"player": player['id'],
+		"name": player['id'],
 		"endpoint": player['endpoint'],
 		"generators": copy(config.DEFAULT_GENERATORS),
 		"improved_generators": copy(config.DEFAULT_GENERATORS),
@@ -77,8 +78,15 @@ def start_game(db, name, players):
 		"pushes": []
 	}
 
+	used_names =[]
+
 	for player in players:
 		p = setup_player(player)
+		i = 0
+		while p['name'] in used_names:
+			i += 1
+			p['name'] = p['player'] + ' %i' % i
+		used_names.append(p['name'])
 		game['players'][p['id']] = p
 		game['player_order'].append(p['id'])
 
