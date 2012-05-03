@@ -11,12 +11,15 @@ import config
 from bottle import abort
 
 import thread
+from threading import Timer
 
 import pusher
 
 pusher.app_id = config.PUSHER_APP_ID
 pusher.key = config.PUSHER_KEY
 pusher.secret = config.PUSHER_SECRET
+
+turn_timeout = None
 
 def push(game, subject, content):
 	game['pushes'].append([subject, content])
@@ -174,6 +177,13 @@ def next_turn(db, game):
 		if response.status == 200:
 			turn_taken = True
 			push(game, 'start-turn', {'player': player, 'turn': game['turn'], 'round': game['round']})
+
+			def force_turn_end():
+				print "Ran out of time"
+				end_turn(db, game, player, forced=True)
+
+			turn_timeout = Timer(config.TURN_TIMEOUT, force_turn_end)
+			turn_timeout.start()
 		else:
 			push(game, 'turn-skipped', {'player': player, 'turn': game['turn'], 'round': game['round']})
 
@@ -204,10 +214,15 @@ def charge_resources(player, resources):
 		player['resources'][resource] -= resources[resource]
 
 @require_player_turn
-def end_turn(db, game, player):
+def end_turn(db, game, player, forced=False):
 	def run_end_turn():
 		next_turn(db, game)
 	print "Ended turn"
+
+	if turn_timeout:
+		turn_timeout.cancel()
+	if forced:
+		communication.request(player, "game/%s/end_turn" % player['id'])
 	thread.start_new_thread(run_end_turn, ())
 	return {"status": "success"}
 
