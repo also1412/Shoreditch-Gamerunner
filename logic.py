@@ -32,8 +32,8 @@ def setup_player(player):
 		"generators": copy(config.DEFAULT_GENERATORS),
 		"improved_generators": copy(config.DEFAULT_GENERATORS),
 		"resources": copy(config.DEFAULT_RESOURCES),
-		"roads": 0,
-		"victory_points": 0
+		"pr": 0,
+		"customers": 0
 	}
 
 	return in_game_player
@@ -129,7 +129,7 @@ def game_is_over(game):
 		return True
 
 	for player in game['players'].values():
-		if player['victory_points'] >= config.MAX_POINTS:
+		if player['customers'] >= config.MAX_POINTS:
 			return True
 
 	return False
@@ -204,21 +204,21 @@ def end_turn(db, game, player):
 	return {"status": "success"}
 
 def award_bonus_points(game):
-	max_roads = 0
+	max_pr = 0
 	for player in game['players'].values():
-		if player.get('roads',0) > max_roads:
-			max_roads = player['roads']
+		if player.get('pr',0) > max_pr:
+			max_pr = player['pr']
 	
 	for player in game['players'].values():
-		if player.get('roads') == max_roads:
-			player['victory_points'] += 2
+		if player.get('pr') == max_pr:
+			player['customers'] += 2
 			push(game, 'award-bonus', {"points": 2, "player": player})
 
 def end_game(game):
 	award_bonus_points(game)
 
 	def sort_players(player_id):
-		return int(game['players'][player_id]['victory_points'])
+		return int(game['players'][player_id]['customers'])
 
 	game['player_order'] = sorted(game['player_order'], key=sort_players, reverse=True)
 
@@ -228,12 +228,12 @@ def end_game(game):
 		communication.request(player, "game/%s" % player['id'], method="DELETE")
 
 @require_player_turn
-@require_resources(config.ROAD_COST)
-def purchase_road(db, game, player):
-	charge_resources(player, config.ROAD_COST)
-	player['roads'] += 1
+@require_resources(config.PR_COST)
+def purchase_pr(db, game, player):
+	charge_resources(player, config.PR_COST)
+	player['pr'] += 1
 	db.save(game)
-	push(game, 'purchase-road', {"round": game['round'], "turn": game['turn'], "player": player})
+	push(game, 'purchase-pr', {"round": game['round'], "turn": game['turn'], "player": player})
 	return {"player": player}
 
 @require_player_turn
@@ -245,7 +245,7 @@ def purchase_generator(db, game, player):
 	generator = random.choice(config.GENERATORS.keys())
 	player['generators'][generator] += 1
 
-	player['victory_points'] += 1
+	player['customers'] += 1
 
 	db.save(game)
 
@@ -265,7 +265,7 @@ def upgrade_generator(db, game, player, generator_type):
 	player['generators'][generator_type] -= 1
 	player['improved_generators'][generator_type] += 1
 
-	player['victory_points'] += 1
+	player['customers'] += 1
 
 	db.save(game)
 

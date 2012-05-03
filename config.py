@@ -11,29 +11,29 @@ PUSHER_SECRET = "c41f60b9a51f3e061d62"
 # THEME SETTINGS
 
 GENERATORS = {
-	"lumber_mill": "lumber",
-	"ore_refinery": "ore",
-	"grain_field": "grain",
-	"sheep": "wool",
-	"building_yard": "brick"
+	"suggestion_box": "idea",
+	"coder": "feature",
+	"kettle": "coffee",
+	"designer": "website",
+	"investor": "cash"
 }
 
 # RULE SETTINGS
 GENERATOR_COST = {
-	"brick": 1,
-	"lumber": 1,
-	"wool": 1,
-	"grain": 1
+	"cash": 1,
+	"idea": 1,
+	"website": 1,
+	"coffee": 1
 }
 
 GENERATOR_IMPROVEMENT_COST = {
-	"ore": 3,
-	"grain": 2
+	"feature": 3,
+	"coffee": 2
 }
 
-ROAD_COST = {
-	"brick": 1,
-	"lumber": 1
+PR_COST = {
+	"cash": 1,
+	"idea": 1
 }
 
 BANK_TRADE_RATE = 4

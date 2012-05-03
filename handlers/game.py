@@ -38,12 +38,12 @@ def start_game(db, json):
 def end_turn(db, game, player):
 	return logic.end_turn(db, game, player)
 
-@post('/game/:game_id/purchase_road')
+@post('/game/:game_id/purchase_pr')
 @use_db
 @use_game
 @require_player
 def purchase_road(db, game, player):
-	return logic.purchase_road(db, game, player)
+	return logic.purchase_pr(db, game, player)
 
 @post('/game/:game_id/purchase_generator')
 @use_db

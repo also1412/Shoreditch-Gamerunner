@@ -53,8 +53,8 @@
 						%pass
 {/each}}
 					</ul>
-					<span class="victory_points">${victory_points} Points</span>
-					<span class="roads">${roads} Roads</span>
+					<span class="customers">${customers} Customers</span>
+					<span class="pr">${pr} PR</span>
 				</li>
 				{\\
 				%pass
@@ -97,8 +97,8 @@
 						%pass
 {/each}}
 					</ul>
-					<span class="victory_points">${victory_points} Points</span>
-					<span class="roads">${roads} Roads</span>
+					<span class="customers">${customers} customers</span>
+					<span class="pr">${pr} PR</span>
 				</li>
 				{\\
 				%pass
@@ -134,9 +134,9 @@
 	</li>
 </script>
 
-<script id="purchase-road" type="text/x-jquery-tmpl">
-	<li class="purchase_road">
-		${data.player.player} purchased a road
+<script id="purchase-pr" type="text/x-jquery-tmpl">
+	<li class="purchase_pr">
+		${data.player.player} purchased a pr
 	</li>
 </script>
 
@@ -213,8 +213,8 @@
 						%pass
 {/each}}
 					</ul>
-					<span class="victory_points">${victory_points} Points</span>
-					<span class="roads">${roads} Roads</span>
+					<span class="customers">${customers} points</span>
+					<span class="pr">${pr} PR</span>
 				</li>
 				{\\
 				%pass
@@ -259,8 +259,8 @@
 	channel.bind('upgrade-generator', function(data) {
 		add_to_turn(data.round, data.turn, $('#upgrade-generator').tmpl({'data': data}))
 	});
-	channel.bind('purchase-road', function(data) {
-		add_to_turn(data.round, data.turn, $('#purchase-road').tmpl({'data': data}))
+	channel.bind('purchase-pr', function(data) {
+		add_to_turn(data.round, data.turn, $('#purchase-pr').tmpl({'data': data}))
 	});
 	channel.bind('trade', function(data) {
 		add_to_turn(data.round, data.turn, $('#trade').tmpl({'data': data}))
