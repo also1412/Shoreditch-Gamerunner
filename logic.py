@@ -19,8 +19,6 @@ pusher.app_id = config.PUSHER_APP_ID
 pusher.key = config.PUSHER_KEY
 pusher.secret = config.PUSHER_SECRET
 
-turn_timeout = None
-
 def push(game, subject, content):
 	game['pushes'].append([subject, content])
 	p = pusher.Pusher()
@@ -87,6 +85,7 @@ def start_game(db, name, players):
 		"players": {},
 		"player_order": [],
 		"turn": len(players),
+		"turn_id": None,
 		"round": 0,
 		"pushes": []
 	}
@@ -183,14 +182,19 @@ def next_turn(db, game):
 		response, data = communication.request(player, "game/%s/start_turn" % player['id'])
 
 		if response.status == 200:
+			turn_id = uuid4().hex
+			game['turn_id'] = turn_id
 			player['actions'] = {}
 			db.save(game)
 			turn_taken = True
 			push(game, 'start-turn', {'player': player, 'turn': game['turn'], 'round': game['round']})
 
 			def force_turn_end():
-				print "Ran out of time"
-				end_turn(db, game, player, forced=True)
+				g = db.get(game['id'])
+				if g['turn_id'] == turn_id:
+					# The turn hasn't changed
+					print "Out of time"
+					end_turn(db, game, player, forced=True)
 
 			turn_timeout = Timer(config.TURN_TIMEOUT, force_turn_end)
 			turn_timeout.start()
@@ -230,12 +234,14 @@ def end_turn(db, game, player, forced=False):
 	def run_end_turn():
 		next_turn(db, game)
 	print "Ended turn"
+	
+	game['turn_id'] = None
+	db.save(game)
 
-	if turn_timeout:
-		turn_timeout.cancel()
 	if forced:
 		push(game, 'timeout', {'player': player, 'turn': game['turn'], 'round': game['round']})
 		communication.request(player, "game/%s/end_turn" % player['id'])
+
 	thread.start_new_thread(run_end_turn, ())
 	return {"status": "success"}
 
@@ -341,7 +347,7 @@ def trade(db, game, player, offering, requesting):
 				for resource in requesting:
 					player['resources'][resource] += requesting[resource]
 
-				log_action(game, player, 'trade', {"offer": offering, "request": requesting, "traded_with": p})
+				log_action(game, player, 'trade', {"offer": offering, "request": requesting, "traded_with": p['id']})
 				push(game, 'trade-accepted', {"trade_id": trade_id, "player": p})
 
 				db.save(game)
