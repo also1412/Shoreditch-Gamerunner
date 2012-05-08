@@ -10,6 +10,10 @@ from admin import list_players, add_player
 from game import start_game
 
 
+@get('/')
+def i():
+	return redirect('/ui/')
+
 @get('/ui/')
 @view('index.html')
 def index():
