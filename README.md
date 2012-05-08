@@ -41,6 +41,8 @@ Assuming the AI accepts it's turn, it can then perform the following actions:
 
 When the game is over, the server with send a DELETE request to `/game/<game_id>`.
 
+The player object contains a `secret` which must be sent in the body of every request by the AI (under the key `secret`).
+
 ### Purchase PR
 When purchasing PR, you must ensure you have enough resources to cover the cost. If you successfully purchase the PR the server will return status 200, otherwise it will return 400.
 
