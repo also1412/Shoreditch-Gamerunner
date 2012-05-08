@@ -26,7 +26,7 @@ If you want to write your entry without using the [SampleAI](https://github.com/
 
 All AIs must expose a number of standard HTTP urls, and the host much be registered with the gamerunner, either by using the interface at /ui/ or by adding the endpoint to `preload_ais.py`. Everything in the `/ui/` or `/admin/` directory is related to creating and viewing a game, and should not be accessed by an AI.
 
-All communication uses JSON, and the Content-Type for requests should be "application/json".
+All communication uses JSON, and the Content-Type for requests should be "application/json". Every request from the server to an AI will include a `player` key, which contains the current state of the AI's player.
 
 When a game starts, the Gamerunner POSTS to `/game/<game_id>/` passing the `player`'s own information and the `endpoint` of the server.  If there is a problem starting the game the Gamerunner will then POST to `/game/<game_id>/cancel`.
 
