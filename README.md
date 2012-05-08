@@ -68,3 +68,8 @@ When a player is sent, it contains:
 * pr, which is the amount of PR the player has
 * customers, which is the amount of customers the player has
 * actions, which contains all of the actions taken by other players since this player's last turn
+
+Problems
+========
+
+If this information is unclear, or you see a bug with the competition, please add an issue on Github or email me at jonathan.scott@wazoku.com
