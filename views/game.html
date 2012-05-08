@@ -1,13 +1,66 @@
-<h1>{{game_name}}</h1>
+<style>
+	body {
+		background: #ACA3D8;
+	}
+	
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.round {
+		border-radius: 10px;
+		border: 3px solid black;
+		background: white;
+		padding: 10px;
+		margin-bottom: 10px;
+	}
+
+	h1, h2, h3 {
+		margin: 0;
+	}
+
+	.player {
+		display: inline-block;
+		border: 3px solid black;
+		border-radius: 10px;
+		padding: 10px;
+	}
+
+	.generated {
+		border: 1px solid black;
+		border-radius: 10px;
+		padding: 10px;
+	}
+
+	.generators, .improved_generators {
+		border: 1px solid black;
+		border-radius: 10px;
+		padding: 10px;
+		display: inline-block;
+	}
+
+	.resources {
+		border: 1px solid black;
+		border-radius: 10px;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.resources li {
+		display: inline-block;
+	}
+</style>
+<h1>Startups of Shoreditch</h1>
 
 <ul id="game">
 
 </ul>
 
 <script id="round-generated" type="text/x-jquery-tmpl">
-	<li id="round_${data.round}">
+	<li class="round" id="round_${data.round}">
 		<h1>Round ${data.round}</h1>
-				<ul>{\\
+				<ul class="generated">{\\
 			%pass
 {each(id, player) data.generated}}
 				{\\
@@ -26,12 +79,12 @@
 		<ul class="players">{\\
 			%pass
 {each(id, player) data.players}}
-				<li class="player_${id}">
+				<li class="player player_${id}">
 					<h3>${name}</h3>
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -39,7 +92,7 @@
 					<ul class="improved_generators">{\\
 						%pass
 {each(resource, amount) improved_generators}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${improved_generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -48,13 +101,15 @@
 					<ul class="resources">{\\
 						%pass
 {each(resource, amount) resources}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${resource_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
 					</ul>
-					<span class="customers">${customers} Customers</span>
-					<span class="pr">${pr} PR</span>
+					<div class="score">
+						<span class="customers">${customers} Customers</span>
+						<span class="pr">${pr} PR</span>
+					</div>
 				</li>
 				{\\
 				%pass
@@ -65,17 +120,17 @@
 </script>
 
 <script id="round" type="text/x-jquery-tmpl">
-	<li id="round_${data.round}">
+	<li class="round" id="round_${data.round}">
 		<h1>Round ${data.round}</h1>
 		<ul class="players">{\\
 			%pass
 {each(id, player) data.players}}
-				<li class="player_${id}">
+				<li class="player player_${id}">
 					<h3>${name}</h3>
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -83,7 +138,7 @@
 					<ul class="improved_generators">{\\
 						%pass
 {each(resource, amount) improved_generators}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${improved_generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -92,13 +147,15 @@
 					<ul class="resources">{\\
 						%pass
 {each(resource, amount) resources}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${resource_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
 					</ul>
-					<span class="customers">${customers} customers</span>
-					<span class="pr">${pr} PR</span>
+					<div class="score">
+						<span class="customers">${customers} customers</span>
+						<span class="pr">${pr} PR</span>
+					</div>
 				</li>
 				{\\
 				%pass
@@ -239,6 +296,10 @@
 
 <script>
 	
+	var resource_names = {{!resource_names}}
+	var generator_names = {{!generator_names}}
+	var improved_generator_names = {{!improved_generator_names}}
+
 	function add_to_turn(round, turn, el) {
 		$('#round_' + round + ' .turn_' + turn + ' .turn_actions').append(el)
 	}
@@ -247,6 +308,9 @@
 	var channel = pusher.subscribe('game-{{game_id}}');
 
 	channel.bind('new-round', function(data) {
+		data['generator_names'] = generator_names;
+		data['improved_generator_names'] = improved_generator_names;
+		data['resource_names'] = resource_names;
 		if ('generated' in data) {
 			$('#game').append($('#round-generated').tmpl({"data": data}));
 		} else {

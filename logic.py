@@ -75,13 +75,12 @@ def run_generators(players):
 					award(player, generator, 2)
 	return awarded
 
-def start_game(db, name, players):
+def start_game(db, players):
 	print "Starting game"
 	game_id = uuid4().hex
 
 	game = {
 		"id": game_id,
-		"name": name,
 		"players": {},
 		"player_order": [],
 		"turn": len(players),

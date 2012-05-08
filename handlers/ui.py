@@ -9,6 +9,7 @@ from storage import use_db
 from admin import list_players, add_player
 from game import start_game
 
+import config
 
 @get('/')
 def i():
@@ -32,7 +33,7 @@ def ui_start_game():
 			for i in range(int(request.POST[k])):
 				players.append(k[7:])
 
-	game_id = start_game(json={"name": request.POST['name'], "players": players})['game_id']
+	game_id = start_game(json={"players": players})['game_id']
 	redirect('/ui/game/' + game_id)
 
 @get('/ui/game/:game_id')
@@ -42,4 +43,8 @@ def view_game(db, game_id):
 	game = db.get(game_id)
 	if not game:
 		abort(404, "Invalid game id")
-	return {"game_id": game_id, "game_name": game['name'], "pushes": json.dumps(game['pushes'])}
+	return {"game_id": game_id, 
+			"pushes": json.dumps(game['pushes']), 
+			"resource_names": json.dumps(config.RESOURCE_NAMES),
+			"generator_names": json.dumps(config.GENERATOR_NAMES),
+			"improved_generator_names": json.dumps(config.IMPROVED_GENERATOR_NAMES),}

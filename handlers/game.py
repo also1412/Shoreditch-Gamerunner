@@ -24,10 +24,7 @@ def start_game(db, json):
 	if len(players) < MIN_PLAYERS:
 		abort(400, "Can not have less than %i players in a game" % MIN_PLAYERS)
 
-	if not 'name' in json:
-		json['name'] = uuid4().hex
-
-	game_id = logic.start_game(db, json['name'], players)
+	game_id = logic.start_game(db, players)
 
 	return {"game_id": game_id}
 

@@ -15,7 +15,7 @@ GENERATORS = {
 	"coder": "feature",
 	"kettle": "coffee",
 	"designer": "website",
-	"investor": "cash"
+	"angel_investor": "cash"
 }
 
 # RULE SETTINGS
@@ -36,9 +36,21 @@ PR_COST = {
 	"idea": 1
 }
 
-BANK_TRADE_RATE = 4
-
 RESOURCES = GENERATORS.values()
+
+RESOURCE_NAMES = dict((v,v.replace('_', ' ').title()) for v in RESOURCES)
+
+GENERATOR_NAMES = dict((k,k.replace('_', ' ').title()) for k in GENERATORS.keys())
+IMPROVED_GENERATOR_NAMES = {
+	"suggestion_box": "Idea Management System",
+	"coder": "Rockstar Coder",
+	"kettle": "Espresso Machine",
+	"designer": "Hipster Designer",
+	"angel_investor": "VC Fund"
+}
+
+
+BANK_TRADE_RATE = 4
 GENERATOR_REWARD = 1
 GENERATOR_IMPROVEMENT_REWARD = 1
 LONGEST_ROAD_BONUS = 2
