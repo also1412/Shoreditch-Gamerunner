@@ -39,7 +39,7 @@ def end_turn(db, game, player):
 @use_db
 @use_game
 @require_player
-def purchase_road(db, game, player):
+def purchase_pr(db, game, player):
 	return logic.purchase_pr(db, game, player)
 
 @post('/game/:game_id/purchase_generator')
