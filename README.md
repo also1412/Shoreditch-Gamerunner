@@ -14,17 +14,25 @@ Overview
 
 An overview of the game can be seen on [the details page](https://siliconmilkroundabout.wazoku.com/details).
 
+
+Getting it running
+---
+The easiest way to get the gamerunner running is to set up a virtualenv, install the requirements, and run app.py, like so:
+	virtualenv ve
+	source ve/bin/activate
+	pip install -r requirements
+	python app.py
+
 Entering the competition
 ---
 
 It is easiest to build your entry based on the [SampleAI](https://github.com/Wazoku/Shoreditch-SampleAI). You can find instructions on how to do that in the SampleAI README.
 
-
 Communication
 ---
 If you want to write your entry without using the [SampleAI](https://github.com/Wazoku/Shoreditch-SampleAI), you're probably going to have to have a look at the code in the `handlers/` directory and `logic.py` to figure out exactly how stuff works, however it's also helpful to know the general flow and structure of a game.
 
-All AIs must expose a number of standard HTTP urls, and the host much be registered with the gamerunner, either by using the interface at /ui/ or by adding the endpoint to `preload_ais.py`. Everything in the `/ui/` or `/admin/` directory is related to creating and viewing a game, and should not be accessed by an AI.
+All AIs must expose a number of standard HTTP urls, and the host much be registered with the gamerunner, either by using the interface at /ui/ or by adding the endpoint to `preload_ais.py`. Everything in the `/ui/` or `/admin/` directory is related to creating and viewing a game, and should not be accessed by an AI. Your implementation should make it easy to change the port, as this may be required during the final playoff.
 
 All communication uses JSON, and the Content-Type for requests should be "application/json". Every request from the server to an AI will include a `player` key, which contains the current state of the AI's player.
 
