@@ -247,7 +247,7 @@ def end_turn(db, game, player, forced=False):
 def end_game(game):
 
 	def sort_players(player_id):
-		return int(game['players'][player_id]['customers'])
+		return (int(game['players'][player_id]['customers']), sum(game['players'][player_id]['resources'].values()))
 
 	game['player_order'] = sorted(game['player_order'], key=sort_players, reverse=True)
 
