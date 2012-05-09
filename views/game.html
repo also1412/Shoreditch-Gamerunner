@@ -253,12 +253,6 @@
 	The trade was accepted by the bank
 </script>
 
-<script id="award-bonus" type="text/x-jquery-tmpl">
-	<li class="bonus">
-		<p>${data.player.name} got ${data.customers} extra customers through PR.</p>
-	</li>
-</script>
-
 <script id="end" type="text/x-jquery-tmpl">
 	<li class="end_game">
 		<h1>The game is over</h1>
@@ -369,9 +363,7 @@
 		div.removeClass('pending').addClass('accepted').addClass('bank-accepted')
 		div.find('.result').html($('#bank-trade-accepted').tmpl({'data': data}))
 	});
-	channel.bind('award-bonus', function(data) {
-		$('#game').append($('#award-bonus').tmpl({"data": data}));
-	});
+
 	channel.bind('end', function(data) {
 		$('#game').append($('#end').tmpl({"data": data}));
 	});

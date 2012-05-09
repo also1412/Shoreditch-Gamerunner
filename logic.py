@@ -44,7 +44,7 @@ def setup_player(player):
 		"improved_generators": copy(config.DEFAULT_GENERATORS),
 		"resources": copy(config.DEFAULT_RESOURCES),
 		"pr": 0,
-		"customers": 0,
+		"customers": 2,
 		"actions": {}
 	}
 
@@ -244,19 +244,7 @@ def end_turn(db, game, player, forced=False):
 	thread.start_new_thread(run_end_turn, ())
 	return {"status": "success"}
 
-def award_bonus_points(game):
-	max_pr = 0
-	for player in game['players'].values():
-		if player.get('pr',0) > max_pr:
-			max_pr = player['pr']
-	
-	for player in game['players'].values():
-		if player.get('pr') == max_pr:
-			player['customers'] += 2
-			push(game, 'award-bonus', {"customers": 2, "player": player})
-
 def end_game(game):
-	award_bonus_points(game)
 
 	def sort_players(player_id):
 		return int(game['players'][player_id]['customers'])
@@ -271,12 +259,25 @@ def end_game(game):
 @require_player_turn
 @require_resources(config.PR_COST)
 def purchase_pr(db, game, player):
+	max_pr = reduce(lambda m, p: p['pr'] if p['pr'] > m else m , game['players'].values(), 0)
+
+	if max_pr <= (player['pr'] + 1):
+		for p in game['players'].values(): # Take away the bonuses
+			if p['pr'] == max_pr:
+				p['customers'] -= 2
+
 	charge_resources(player, config.PR_COST)
 	player['pr'] += 1
+
+	for p in game['players'].values(): # Reapply bonus
+		if p['pr'] == player['pr']:
+			p['customers'] += 2	
+
 	db.save(game)
 	log_action(game, player, 'purchase-pr')
 	push(game, 'purchase-pr', {"round": game['round'], "turn": game['turn'], "player": player})
-	return {"player": player}
+
+	return {"player": player, "highest_pr": (max_pr <= player['pr'])}
 
 @require_player_turn
 @require_resources(config.GENERATOR_COST)
@@ -293,7 +294,7 @@ def purchase_generator(db, game, player):
 
 	db.save(game)
 
-	log_action(game, player, 'award-generator', {"generator_type": generator})
+	log_action(game, player, 'purchase-generator', {"generator_type": generator})
 	push(game, 'purchase-generator', {"round": game['round'], "turn": game['turn'], "player": player, 'generator_type': generator})
 	return {"player": player, 'generator_type': generator}
 

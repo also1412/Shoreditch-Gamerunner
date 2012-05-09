@@ -20,6 +20,7 @@ class MemoryStorage(object):
 				self.types[doc['type']] = {}
 
 			self.types[doc['type']][doc['id']] = doc
+		return doc['id']
 
 	def get_by_type(self, doc_type):
 		if doc_type not in self.types:
