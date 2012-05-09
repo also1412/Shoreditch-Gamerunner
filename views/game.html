@@ -249,6 +249,10 @@
 	The trade was accepted by ${data.player.name}
 </script>
 
+<script id="trade-bank-accepted" type="text/x-jquery-tmpl">
+	The trade was accepted by the bank.
+</script>
+
 <script id="bank-trade-accepted" type="text/x-jquery-tmpl">
 	The trade was accepted by the bank
 </script>
@@ -358,6 +362,13 @@
 		div.removeClass('pending').addClass('accepted')
 		div.find('.result').html($('#trade-accepted').tmpl({'data': data}))
 	});
+
+	channel.bind('trade-bank-accepted', function(data) {
+		var div = $('#trade_' + data.trade_id);
+		div.removeClass('pending').addClass('accepted').addClass('bank-accepted')
+		div.find('.result').html($('#trade-bank-accepted').tmpl({'data': data}))
+	});
+
 	channel.bind('bank-trade-accepted', function(data) {
 		var div = $('#trade_' + data.trade_id);
 		div.removeClass('pending').addClass('accepted').addClass('bank-accepted')

@@ -335,6 +335,19 @@ def trade(db, game, player, offering, requesting):
 
 	push(game, 'trade', {"round": game['round'], "turn": game['turn'], "player": player, 'offering': offering, 'requesting': requesting, "trade_id": trade_id})
 
+	if sum(offering.values()) >= (sum(requesting.values()) * config.BANK_TRADE_RATE):
+		# The bank will take the trade
+		charge_resources(player, offering)
+		for resource in requesting:
+			player['resources'][resource] += requesting[resource]
+
+		log_action(game, player, 'bank-trade', {"offer": offering, "request": requesting})
+		push(game, 'trade-bank-accepted', {"trade_id": trade_id})
+
+		db.save(game)
+
+		return {"player": player, 'accepted_by': 'bank'}
+
 	for p in players:
 		if has_enough_resources(p, requesting):
 			response, data = communication.request(p, "game/%s/trade" % player['id'], {"player": player['id'], "offering": offering, "requesting": requesting})
@@ -354,21 +367,6 @@ def trade(db, game, player, offering, requesting):
 				db.save(game)
 
 				return {"player": player, 'accepted_by': p['id']}
-
-	# No bites, see if it's good enough for a bank trade
-
-	if sum(offering.values()) >= (sum(requesting.values()) * config.BANK_TRADE_RATE):
-		# The bank will take the trade
-		charge_resources(player, offering)
-		for resource in requesting:
-			player['resources'][resource] += requesting[resource]
-
-		log_action(game, player, 'bank-trade', {"offer": offering, "request": requesting})
-		push(game, 'trade-bank-accepted', {"trade_id": trade_id})
-
-		db.save(game)
-
-		return {"player": player, 'accepted_by': 'bank'}
 
 	log_action(game, player, 'trade-rejected', {"offer": offering, "request": requesting})
 	push(game, 'trade-rejected', {"trade_id": trade_id})
