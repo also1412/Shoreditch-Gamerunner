@@ -269,9 +269,10 @@ def purchase_pr(db, game, player):
 	charge_resources(player, config.PR_COST)
 	player['pr'] += 1
 
-	for p in game['players'].values(): # Reapply bonus
-		if p['pr'] == player['pr']:
-			p['customers'] += 2	
+	if max_pr <= (player['pr']):
+		for p in game['players'].values(): # Reapply bonus
+			if p['pr'] == player['pr']:
+				p['customers'] += 2	
 
 	db.save(game)
 	log_action(game, player, 'purchase-pr')

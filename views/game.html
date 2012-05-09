@@ -264,7 +264,7 @@
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -272,7 +272,7 @@
 					<ul class="improved_generators">{\\
 						%pass
 {each(resource, amount) improved_generators}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${improved_generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -281,7 +281,7 @@
 					<ul class="resources">{\\
 						%pass
 {each(resource, amount) resources}}
-						<li>${amount}x ${resource}</li>
+						<li>${amount}x ${resource_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -365,6 +365,9 @@
 	});
 
 	channel.bind('end', function(data) {
+		data['generator_names'] = generator_names;
+		data['improved_generator_names'] = improved_generator_names;
+		data['resource_names'] = resource_names;
 		$('#game').append($('#end').tmpl({"data": data}));
 	});
 
