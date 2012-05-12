@@ -12,11 +12,9 @@
 	}
 
 	.round {
-		border-radius: 10px;
-		border: 3px solid black;
 		background: white;
-		padding: 10px;
-		margin-bottom: 10px;
+		padding: 20px;
+		margin: 20px;
 	}
 
 	h1, h2, h3 {
@@ -105,6 +103,86 @@
 		background-position: 0 -16px;
 		background-repeat: no-repeat;
 	}
+	.g_angel_investor {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -208px;
+		background-repeat: no-repeat;
+	}
+	.g_coder {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -112px;
+		background-repeat: no-repeat;
+	}
+	.g_kettle {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -176px;
+		background-repeat: no-repeat;
+	}
+	.g_suggestion_box {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -144px;
+		background-repeat: no-repeat;
+	}
+	.g_designer {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -96px;
+		background-repeat: no-repeat;
+	}
+	.i_angel_investor {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -224px;
+		background-repeat: no-repeat;
+	}
+	.i_coder {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -128px;
+		background-repeat: no-repeat;
+	}
+	.i_kettle {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -192px;
+		background-repeat: no-repeat;
+	}
+	.i_suggestion_box {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -160px;
+		background-repeat: no-repeat;
+	}
+	.i_designer {
+		padding-left: 18px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -80px;
+		background-repeat: no-repeat;
+	}
 </style>
 <h1>Startups of Shoreditch</h1>
 
@@ -139,7 +217,7 @@
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
-						<li>${amount}x ${generator_names[resource]}</li>
+						<li class="g_${resource}">${amount}x ${generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -147,7 +225,7 @@
 					<ul class="improved_generators">{\\
 						%pass
 {each(resource, amount) improved_generators}}
-						<li>${amount}x ${improved_generator_names[resource]}</li>
+						<li class="i_${resource}">${amount}x ${improved_generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -156,7 +234,7 @@
 					<ul class="resources">{\\
 						%pass
 {each(resource, amount) resources}}
-						<li>${amount}x ${resource_names[resource]}</li>
+						<li class="${resource}">${amount}x ${resource_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -185,7 +263,7 @@
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
-						<li>${amount}x ${generator_names[resource]}</li>
+						<li class="g_${resource}">${amount}x ${generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -193,7 +271,7 @@
 					<ul class="improved_generators">{\\
 						%pass
 {each(resource, amount) improved_generators}}
-						<li>${amount}x ${improved_generator_names[resource]}</li>
+						<li class="i_${resource}">${amount}x ${improved_generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -202,7 +280,7 @@
 					<ul class="resources">{\\
 						%pass
 {each(resource, amount) resources}}
-						<li>${amount}x ${resource_names[resource]}</li>
+						<li class="${resource}">${amount}x ${resource_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -264,7 +342,7 @@
 		<ul class="offering">{\\
 			% pass
 {each(offer, amount) data.offering}}
-				<li>${amount}x ${offer}</li>
+				<li class="${offer}">${amount}x ${offer}</li>
 			{\\
 			% pass
 {/each}}
@@ -276,7 +354,7 @@
 			{\\
 			% pass
 {each(request, amount) data.requesting}}
-				<li>${amount}x ${request}</li>
+				<li class="${request}">${amount}x ${request}</li>
 			{\\
 			% pass
 {/each}}
