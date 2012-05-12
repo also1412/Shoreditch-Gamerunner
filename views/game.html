@@ -3,6 +3,8 @@
 		background: #ACA3D8;
 		max-width: 1412px;
 		margin: auto;
+		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		font-size: 0.8em;
 	}
 	
 	ul {
@@ -12,13 +14,23 @@
 	}
 
 	.round {
-		background: white;
+		background: #fff;
 		padding: 20px;
 		margin: 20px;
 	}
 
 	h1, h2, h3 {
 		margin: 0;
+	}
+
+	h3 {
+		background-color: #18aff5;
+		color: #fff;
+		padding: 4px 12px;
+	}
+
+	h4 {
+		background-color: #e5e5e5;
 	}
 
 	.players {
@@ -28,43 +40,59 @@
 	}
 
 	.player {
+		border: 1px solid #000;
 		display: inline-block;
-		border: 3px solid black;
-		border-radius: 10px;
-		padding: 10px;
+		margin: 10px 20px 10px 0;
+		padding: 20px;
 
 		-webkit-box-flex: 1;
 		-moz-box-flex: 1;
 		box-flix: 1;
-	}
+}
 
 	.generated {
-		border: 1px solid black;
-		border-radius: 10px;
+		background-color: #ffd584;
 		padding: 10px;
+		margin-bottom: 10px;
 	}
 
 	.generators, .improved_generators {
-		border: 1px solid black;
-		border-radius: 10px;
 		padding: 10px;
 		display: inline-block;
 	}
 
 	.resources {
-		border: 1px solid black;
-		border-radius: 10px;
+		margin-top: 10px;
 		padding-left: 10px;
-		padding-right: 10px;
 	}
+
 	.resources li {
 		display: inline-block;
+	}
+
+	.score {
+		margin-top: 10px;
+		padding-left: 10px;
+	}
+
+	.arrows {
+		display: inline-block;
+	}
+
+	.arrow {
+		padding-left: 20px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -240px;
+		background-repeat: no-repeat;
 	}
 
 	/* icons */
 
 	.idea {
-		padding-left: 18px;
+		margin-right: 4px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -72,7 +100,8 @@
 		background-repeat: no-repeat;
 	}
 	.website {
-		padding-left: 18px;
+		margin-right: 4px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -80,7 +109,8 @@
 		background-repeat: no-repeat;
 	}
 	.coffee {
-		padding-left: 18px;
+		margin-right: 4px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -88,7 +118,8 @@
 		background-repeat: no-repeat;
 	}
 	.feature {
-		padding-left: 18px;
+		margin-right: 4px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -96,7 +127,8 @@
 		background-repeat: no-repeat;
 	}
 	.cash {
-		padding-left: 18px;
+		margin-right: 4px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -104,7 +136,7 @@
 		background-repeat: no-repeat;
 	}
 	.g_angel_investor {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -112,7 +144,7 @@
 		background-repeat: no-repeat;
 	}
 	.g_coder {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -120,7 +152,7 @@
 		background-repeat: no-repeat;
 	}
 	.g_kettle {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -128,7 +160,7 @@
 		background-repeat: no-repeat;
 	}
 	.g_suggestion_box {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -136,7 +168,7 @@
 		background-repeat: no-repeat;
 	}
 	.g_designer {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -144,7 +176,7 @@
 		background-repeat: no-repeat;
 	}
 	.i_angel_investor {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -152,7 +184,7 @@
 		background-repeat: no-repeat;
 	}
 	.i_coder {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -160,7 +192,7 @@
 		background-repeat: no-repeat;
 	}
 	.i_kettle {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -168,7 +200,7 @@
 		background-repeat: no-repeat;
 	}
 	.i_suggestion_box {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -176,7 +208,7 @@
 		background-repeat: no-repeat;
 	}
 	.i_designer {
-		padding-left: 18px;
+		padding-left: 20px;
 		height: 16px;
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
@@ -214,6 +246,7 @@
 {each(id, player) data.players}}
 				<li class="player player_${id}">
 					<h3>${name}</h3>
+					<h4>Assets</h4>
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
@@ -221,6 +254,13 @@
 						{\\
 						%pass
 {/each}}
+					</ul>
+					<ul class="arrows">
+						<li class="arrow"></li>
+						<li class="arrow"></li>
+						<li class="arrow"></li>
+						<li class="arrow"></li>
+						<li class="arrow"></li>
 					</ul>
 					<ul class="improved_generators">{\\
 						%pass
@@ -230,7 +270,7 @@
 						%pass
 {/each}}
 					</ul>
-
+					<h4>Production</h4>
 					<ul class="resources">{\\
 						%pass
 {each(resource, amount) resources}}
@@ -239,6 +279,7 @@
 						%pass
 {/each}}
 					</ul>
+					<h4>Total</h4>
 					<div class="score">
 						<span class="customers">${customers} Customers</span>
 						<span class="pr">${pr} PR</span>
@@ -260,6 +301,7 @@
 {each(id, player) data.players}}
 				<li class="player player_${id}">
 					<h3>${name}</h3>
+					<h4>Assets</h4>
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
@@ -267,6 +309,13 @@
 						{\\
 						%pass
 {/each}}
+					</ul>
+					<ul class="arrows">
+						<li class="arrow"></li>
+						<li class="arrow"></li>
+						<li class="arrow"></li>
+						<li class="arrow"></li>
+						<li class="arrow"></li>
 					</ul>
 					<ul class="improved_generators">{\\
 						%pass
@@ -276,7 +325,7 @@
 						%pass
 {/each}}
 					</ul>
-
+					<h4>Production</h4>
 					<ul class="resources">{\\
 						%pass
 {each(resource, amount) resources}}
@@ -285,6 +334,7 @@
 						%pass
 {/each}}
 					</ul>
+					<h4>Total</h4>
 					<div class="score">
 						<span class="customers">${customers} customers</span>
 						<span class="pr">${pr} PR</span>
