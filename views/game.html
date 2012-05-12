@@ -1,6 +1,6 @@
 <style>
 	body {
-		background: #ACA3D8;
+		background: #e5e5e5;
 		max-width: 1412px;
 		margin: auto;
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -23,6 +23,17 @@
 		margin: 0;
 	}
 
+	.title {
+		margin: 20px;
+		font-size: 3em;
+	}
+
+	h2 {
+		padding: 6px 12px;
+		background-color: #3c3c3c;
+		color: #fff;
+	}
+
 	h3 {
 		background-color: #18aff5;
 		color: #fff;
@@ -34,6 +45,12 @@
 		background-color: #e5e5e5;
 	}
 
+	.status {
+		padding: 5px 12px;
+		color: #fff;
+		background-color: #fe6060;
+	}
+
 	.players {
 		display: -webkit-box;
 		display: -moz-box;
@@ -41,10 +58,8 @@
 	}
 
 	.player {
-		border: 1px solid #000;
 		display: inline-block;
-		margin: 10px 20px 10px 0;
-		padding: 20px;
+		margin: 10px 10px 18px 10px;
 
 		-webkit-box-flex: 1;
 		-moz-box-flex: 1;
@@ -71,156 +86,130 @@
 	}
 
 	.score {
-		margin: 10px 10px 0;
+		margin-top: 10px;
 	}
 
 	.offering, .requesting {
+		width: 100px;
 		display: inline-block;
 		margin: 10px;
+	}
+	.result {
+		display: inline-block;
+	}
+
+	.trade:nth-child(odd) {
+		background-color: #e5e5e5;
+	}
+
+	.trade h4 {
+		background-color: transparent;
+	}
+
+	.end_game {
+		margin: 20px;
+		padding: 20px;
+		background-color: #fff;
+	}
+
+	.end_game h3, .end_game .resources {
+		margin-right: 20px;
+	}
+
+	.gameover {
+		margin-bottom: 20px;
 	}
 
 	/* icons */
 
-	.idea {
-		margin-right: 4px;
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -32px;
-		background-repeat: no-repeat;
-	}
-	.website {
-		margin-right: 4px;
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -64px;
-		background-repeat: no-repeat;
-	}
-	.coffee {
-		margin-right: 4px;
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -48px;
-		background-repeat: no-repeat;
-	}
-	.feature {
-		margin-right: 4px;
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 0;
-		background-repeat: no-repeat;
-	}
-	.cash {
-		margin-right: 4px;
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -16px;
-		background-repeat: no-repeat;
-	}
-	.g_angel_investor {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -208px;
-		background-repeat: no-repeat;
-	}
-	.g_coder {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -112px;
-		background-repeat: no-repeat;
-	}
-	.g_kettle {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -176px;
-		background-repeat: no-repeat;
-	}
-	.g_suggestion_box {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -144px;
-		background-repeat: no-repeat;
-	}
-	.g_designer {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -96px;
-		background-repeat: no-repeat;
-	}
-	.i_angel_investor {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -224px;
-		background-repeat: no-repeat;
-	}
-	.i_coder {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -128px;
-		background-repeat: no-repeat;
-	}
-	.i_kettle {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -192px;
-		background-repeat: no-repeat;
-	}
-	.i_suggestion_box {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -160px;
-		background-repeat: no-repeat;
-	}
-	.i_designer {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -80px;
-		background-repeat: no-repeat;
-	}
-
-	.arrows {
+	.customers, .pr, .arrows {
 		display: inline-block;
 	}
 
-	.arrow {
+	.customers {
+		margin-left: 10px;
+	}
+
+	.idea, .website, .coffee, .feature, .cash {
+		margin-right: 4px;
+	}
+
+	.idea, .website, .coffee, .feature, .cash,
+	.g_angel_investor, .g_coder, .g_kettle, .g_suggestion_box, .g_designer,
+	.i_angel_investor, .i_coder, .i_kettle, .i_suggestion_box, .i_designer,
+	.pr, .customers, .arrow, .t_arrow {
 		padding-left: 20px;
 		height: 16px;
-		background-color: none;
+		background-color: transparent;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -240px;
 		background-repeat: no-repeat;
 	}
+
+	.pr {
+		background-position: 0 -256px;
+	}
+	.customers {
+		background-position: 0 -272px;
+	}
+	.idea {
+		margin-right: 4px;
+		background-position: 0 -32px;
+	}
+	.website {
+		margin-right: 4px;
+		background-position: 0 -64px;
+	}
+	.coffee {
+		margin-right: 4px;
+		background-position: 0 -48px;
+	}
+	.feature {
+		margin-right: 4px;
+		background-position: 0 0;
+	}
+	.cash {
+		margin-right: 4px;
+		background-position: 0 -16px;
+	}
+	.g_angel_investor {
+		background-position: 0 -208px;
+	}
+	.g_coder {
+		background-position: 0 -112px;
+	}
+	.g_kettle {
+		background-position: 0 -176px;
+	}
+	.g_suggestion_box {
+		background-position: 0 -144px;
+	}
+	.g_designer {
+		background-position: 0 -96px;
+	}
+	.i_angel_investor {
+		background-position: 0 -224px;
+	}
+	.i_coder {
+		background-position: 0 -128px;
+	}
+	.i_kettle {
+		background-position: 0 -192px;
+	}
+	.i_suggestion_box {
+		background-position: 0 -160px;
+	}
+	.i_designer {
+		background-position: 0 -80px;
+	}
+	.arrow {
+		background-position: 0 -240px;
+	}
+	.t_arrow {
+		width: 16px;
+		background-position: 0 -288px;
+	}
 </style>
-<h1>Startups of Shoreditch</h1>
+<h1 class="title">Startups of Shoreditch</h1>
 
 <ul id="game">
 
@@ -368,25 +357,25 @@
 
 <script id="purchase-generator" type="text/x-jquery-tmpl">
 	<li class="purchase_generator generator_${data.generator_type}">
-		${data.player.name} purchased a ${data.generator_type}
+		<h4 class="status">${data.player.name} purchased a ${data.generator_type}</h4>
 	</li>
 </script>
 
 <script id="upgrade-generator" type="text/x-jquery-tmpl">
 	<li class="upgrade_generator upgrade_${data.generator_type}">
-		${data.player.name} upgraded a ${data.generator_type}
+		<h4 class="status">${data.player.name} upgraded a ${data.generator_type}</h4>
 	</li>
 </script>
 
 <script id="purchase-pr" type="text/x-jquery-tmpl">
 	<li class="purchase_pr">
-		${data.player.name} purchased a pr
+		<h4 class="status">${data.player.name} purchased a pr</h4>
 	</li>
 </script>
 
 <script id="timeout" type="text/x-jquery-tmpl">
 	<li class="purchase_pr">
-		${data.player.name} ran out of time!
+		<h4 class="status">${data.player.name} ran out of time!</h4>
 	</li>
 </script>
 
@@ -403,7 +392,7 @@
 		</ul>
 
 		<ul class="arrows">
-			<li class="arrow"></li>
+			<li class="t_arrow"></li>
 		</ul>
 
 		<ul class="requesting">
@@ -416,9 +405,9 @@
 {/each}}
 		</ul>
 
-		<div class="result">
-			The other players are considering the offer
-		</div>
+		<ul class="result">
+			<li>The other players are considering the offer</li>
+		</ul>
 	</li>
 </script>
 
@@ -436,7 +425,7 @@
 
 <script id="end" type="text/x-jquery-tmpl">
 	<li class="end_game">
-		<h1>The game is over</h1>
+		<h1 class="gameover">The game is over</h1>
 		<ul class="players">{\\
 			%pass
 {each(id, player) data.players}}
@@ -445,7 +434,7 @@
 					<ul class="generators">{\\
 						%pass
 {each(resource, amount) generators}}
-						<li>${amount}x ${generator_names[resource]}</li>
+						<li class="g_${resource}">${amount}x ${generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -453,7 +442,7 @@
 					<ul class="improved_generators">{\\
 						%pass
 {each(resource, amount) improved_generators}}
-						<li>${amount}x ${improved_generator_names[resource]}</li>
+						<li class="i_${resource}">${amount}x ${improved_generator_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
@@ -462,7 +451,7 @@
 					<ul class="resources">{\\
 						%pass
 {each(resource, amount) resources}}
-						<li>${amount}x ${resource_names[resource]}</li>
+						<li class="${resource}">${amount}x ${resource_names[resource]}</li>
 						{\\
 						%pass
 {/each}}
