@@ -19,7 +19,7 @@
 		margin: 20px;
 	}
 
-	h1, h2, h3 {
+	h1, h2, h3, h4 {
 		margin: 0;
 	}
 
@@ -30,6 +30,7 @@
 	}
 
 	h4 {
+		padding: 3px 12px;
 		background-color: #e5e5e5;
 	}
 
@@ -53,17 +54,16 @@
 	.generated {
 		background-color: #ffd584;
 		padding: 10px;
-		margin-bottom: 10px;
+		margin: 10px 0;
 	}
 
 	.generators, .improved_generators {
-		padding: 10px;
+		margin: 10px;
 		display: inline-block;
 	}
 
 	.resources {
-		margin-top: 10px;
-		padding-left: 10px;
+		margin: 10px;
 	}
 
 	.resources li {
@@ -71,21 +71,12 @@
 	}
 
 	.score {
-		margin-top: 10px;
-		padding-left: 10px;
+		margin: 10px 10px 0;
 	}
 
-	.arrows {
+	.offering, .requesting {
 		display: inline-block;
-	}
-
-	.arrow {
-		padding-left: 20px;
-		height: 16px;
-		background-color: none;
-		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
-		background-position: 0 -240px;
-		background-repeat: no-repeat;
+		margin: 10px;
 	}
 
 	/* icons */
@@ -213,6 +204,19 @@
 		background-color: none;
 		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
 		background-position: 0 -80px;
+		background-repeat: no-repeat;
+	}
+
+	.arrows {
+		display: inline-block;
+	}
+
+	.arrow {
+		padding-left: 20px;
+		height: 16px;
+		background-color: none;
+		background-image: url(http://dl.dropbox.com/u/5654087/icon.png);
+		background-position: 0 -240px;
 		background-repeat: no-repeat;
 	}
 </style>
@@ -388,7 +392,7 @@
 
 <script id="trade" type="text/x-jquery-tmpl">
 	<li class="trade pending" id="trade_${data.trade_id}">
-		${data.player.name} is offering to trade.
+		<h4>${data.player.name} is offering to trade.</h4>
 		<ul class="offering">{\\
 			% pass
 {each(offer, amount) data.offering}}
@@ -398,7 +402,9 @@
 {/each}}
 		</ul>
 
-		for
+		<ul class="arrows">
+			<li class="arrow"></li>
+		</ul>
 
 		<ul class="requesting">
 			{\\
