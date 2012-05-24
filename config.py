@@ -8,6 +8,17 @@ PUSHER_APP_ID = "19057"
 PUSHER_KEY = "b91e1271dbcde8bb5b5d"
 PUSHER_SECRET = "c41f60b9a51f3e061d62"
 
+
+############################
+###
+### This is to stop us using all our Pusher bandwidth on everyone testing their AIs
+### - All it does is make the gamerunner show information one round at a time rather than
+###   one action at a time. If you'd like to disable this PLEASE sign up for your own
+###   pusher account at http://pusher.com/ and update the Pusher settings above to your own settings
+###
+############################
+LOW_BANDWIDTH_MODE = False
+
 # THEME SETTINGS
 
 GENERATORS = {

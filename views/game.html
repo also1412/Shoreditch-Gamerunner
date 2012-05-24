@@ -579,6 +579,12 @@
 		$('#game').append($('#end').tmpl({"data": data}));
 	});
 
+	channel.bind('dump-round', function(pushes) {
+		for (var i in pushes) {
+			pusher.channels.channels['game-{{game_id}}'].emit(pushes[i][0], pushes[i][1]);
+		}
+	});
+
 	var pushes = {{!pushes}}
 
 	for (var i in pushes) {

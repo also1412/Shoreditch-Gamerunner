@@ -19,10 +19,23 @@ pusher.app_id = config.PUSHER_APP_ID
 pusher.key = config.PUSHER_KEY
 pusher.secret = config.PUSHER_SECRET
 
+rounds = {}
+
 def push(game, subject, content):
 	game['pushes'].append([subject, content])
 	p = pusher.Pusher()
-	p['game-' + game['id']].trigger(subject, content)
+	if config.LOW_BANDWIDTH_MODE:
+		if not game['id'] in rounds:
+			rounds[game['id']] = []
+		rounds[game['id']].append([subject, content])
+		
+		if subject == 'new-round':
+			# Dump the previous round
+			if len(rounds.get(game['id'], [])) > 0:
+				p['game-' + game['id']].trigger('dump-round', rounds[game['id']])
+			rounds[game['id']] = []
+	else:
+		p['game-' + game['id']].trigger(subject, content)
 
 def log_action(game, player, action, data={}):
 	data['action'] = action
