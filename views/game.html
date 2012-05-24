@@ -509,6 +509,7 @@
 
 	function add_to_turn(round, turn, el) {
 		$('#round_' + round + ' .turn_' + turn + ' .turn_actions').append(el)
+		window.scrollTo(0, document.body.scrollHeight);
 	}
 
 	var pusher = new Pusher('b91e1271dbcde8bb5b5d');
@@ -527,10 +528,12 @@
 
 	channel.bind('start-turn', function(data) {
 		$('#round_' + data.round + ' .round_actions').append($('#turn').tmpl({'data': data}));
+		window.scrollTo(0, document.body.scrollHeight);
 	});
 
 	channel.bind('turn-skipped', function(data) {
 		$('#round_' + data.round + ' .round_actions').append($('#turn').tmpl({'data': data}));
+		window.scrollTo(0, document.body.scrollHeight);
 	});
 
 	channel.bind('purchase-generator', function(data) {
@@ -577,12 +580,14 @@
 		data['improved_generator_names'] = improved_generator_names;
 		data['resource_names'] = resource_names;
 		$('#game').append($('#end').tmpl({"data": data}));
+		window.scrollTo(0, document.body.scrollHeight);
 	});
 
 	channel.bind('dump-round', function(pushes) {
 		for (var i in pushes) {
 			pusher.channels.channels['game-{{game_id}}'].emit(pushes[i][0], pushes[i][1]);
 		}
+		window.scrollTo(0, document.body.scrollHeight);
 	});
 
 	var pushes = {{!pushes}}

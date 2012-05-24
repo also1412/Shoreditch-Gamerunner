@@ -17,7 +17,7 @@ PUSHER_SECRET = "c41f60b9a51f3e061d62"
 ###   pusher account at http://pusher.com/ and update the Pusher settings above to your own settings
 ###
 ############################
-LOW_BANDWIDTH_MODE = False
+LOW_BANDWIDTH_MODE = True
 
 # THEME SETTINGS
 
