@@ -208,12 +208,43 @@
 		width: 16px;
 		background-position: 0 -288px;
 	}
+
+	#wazoku {
+		float: left;
+	}
+
+	#wazoku span {
+		display: block;
+		text-align: center;
+	}
+	#pusher {
+		float: right;
+	}
+	#pusher img {
+		width: 200px;
+	}
+
+	#icons {
+		clear: both;
+	}
 </style>
 <h1 class="title">Startups of Shoreditch</h1>
 
 <ul id="game">
 
 </ul>
+
+<div id="credit">
+	<div id="wazoku">
+		<span>Powered By:</span>
+		<a href="http://wazoku.com"><img src="https://wazoku-static.s3.amazonaws.com/logos/wazoku-logo.png"></a>
+	</div>
+	<div id="pusher">
+		<a href="http://pusher.com/"><img src="https://wazoku-static.s3.amazonaws.com/microapp/siliconmilkroundabout.wazoku.com/pusher+w+slogan.png"></a>
+	</div>
+
+	<p id="icons">Icons by <a href="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</a>.</p>
+</div>
 
 <script id="round-generated" type="text/x-jquery-tmpl">
 	<li class="round" id="round_${data.round}">
