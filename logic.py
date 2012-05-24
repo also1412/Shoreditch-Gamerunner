@@ -363,7 +363,7 @@ def trade(db, game, player, offering, requesting):
 
 	for p in players:
 		if has_enough_resources(p, requesting):
-			response, data = communication.request(p, "game/%s/trade" % player['id'], {"player": player['id'], "offering": offering, "requesting": requesting})
+			response, data = communication.request(p, "game/%s/trade" % p['id'], {"player": player['id'], "offering": offering, "requesting": requesting})
 			if response.status == 200:
 				charge_resources(player, offering)
 				charge_resources(p, requesting)
