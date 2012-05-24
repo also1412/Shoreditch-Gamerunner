@@ -3,7 +3,7 @@
 ##########
 from uuid import uuid4
 import random
-from copy import copy
+from copy import copy, deepcopy
 
 import communication
 import config
@@ -27,7 +27,7 @@ def push(game, subject, content):
 	if config.LOW_BANDWIDTH_MODE:
 		if not game['id'] in rounds:
 			rounds[game['id']] = []
-		rounds[game['id']].append([subject, content])
+		rounds[game['id']].append([subject, deepcopy(content)])
 		
 		if subject == 'new-round':
 			# Dump the previous round
@@ -71,7 +71,7 @@ def run_generators(players):
 		player['resources'][generated] += 1
 
 		if not player['id'] in awarded:
-			awarded[player['id']] = {"name": player['player'], "resources": {}}
+			awarded[player['id']] = {"name": player['name'], "resources": {}}
 		if not generated in awarded[player['id']]["resources"]:
 			awarded[player['id']]["resources"][generated] = 0
 
